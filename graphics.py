@@ -13,7 +13,7 @@ def get_resolution():
     resolution[1] = int(data['res_y'])
     return resolution
 
-
+# abc
 class GuiObject(pygame.sprite.Sprite):
     def __init__(self, type_of_object):
         super().__init__()
