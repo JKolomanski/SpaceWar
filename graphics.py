@@ -15,7 +15,7 @@ def get_resolution():
 
 
 class GuiObject(pygame.sprite.Sprite):
-    def __init__(self, type_of_object):
+    def __init__(self, type_of_object, type_of_button=None):
         super().__init__()
 
         if type_of_object == 'press_any_key':
@@ -33,6 +33,19 @@ class GuiObject(pygame.sprite.Sprite):
                 .convert()
             self.image = logo
             self.rect = self.image.get_rect(midtop=(resolution[0] / 2, resolution[1] / 24))
+
+        if type_of_object == 'menu_button':
+            if type_of_button == 'arcade':
+                self.image = pygame.transform.scale(pygame.image.load('Graphics/arcade.png'), (196, 44))
+                self.rect = self.image.get_rect(center=(resolution[0] / 2, resolution[1] / 1.6))
+
+            if type_of_button == 'campaign':
+                self.image = pygame.transform.scale(pygame.image.load('Graphics/campaign.png'), (236, 44))
+                self.rect = self.image.get_rect(center=(resolution[0] / 2, resolution[1] / 1.6 + 53))
+
+            if type_of_button == 'settings':
+                self.image = pygame.transform.scale(pygame.image.load('Graphics/settings.png'), (148, 44))
+                self.rect = self.image.get_rect(center=(resolution[0] / 2, resolution[1] / 1.6 + 106))
 
     def animate(self):
         self.animation_index += 0.03

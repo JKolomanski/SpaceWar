@@ -110,3 +110,39 @@ class Player(pygame.sprite.Sprite):
         self.going_forward()
         self.turning()
         self.calculating_position()
+
+
+class PlayerCursor(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+
+        global resolution
+
+        self.x = resolution[0] / 2 - 160
+        self.y = resolution[1] / 1.6
+
+        player_on1 = pygame.transform.scale(pygame.image.load('Graphics/player1_01.png'), (64, 64)).convert_alpha()
+        player_on2 = pygame.transform.scale(pygame.image.load('Graphics/player1_02.png'), (64, 64)).convert_alpha()
+        player_on3 = pygame.transform.scale(pygame.image.load('Graphics/player1_03.png'), (64, 64)).convert_alpha()
+        self.player_animation_index = 0
+        self.animation_frames = [player_on1, player_on2, player_on3]
+
+        self.image = pygame.transform.rotate(self.animation_frames[self.player_animation_index], 0.3)
+        self.rect = self.image.get_rect(center=(self.x, self.y))
+
+    def update(self, index):
+
+        self.player_animation_index += 0.3
+        if self.player_animation_index >= len(self.animation_frames):
+            self.player_animation_index = 0
+        self.image = self.animation_frames[int(self.player_animation_index)]
+
+        if index == 0:
+            self.y = resolution[1] / 1.6
+        if index == 1:
+            self.y = resolution[1] / 1.6 + 53
+        if index == 2:
+            self.y = resolution[1] / 1.6 + 106
+
+        self.image = pygame.transform.rotate(self.animation_frames[int(self.player_animation_index)], 90)
+        self.rect = self.image.get_rect(center=(self.x, self.y))
