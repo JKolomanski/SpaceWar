@@ -21,9 +21,8 @@ gamemode = 0
 
 # screen, icon, display caption
 screen = pygame.display.set_mode(resolution)
-pygame.display.set_caption('SpaceWar! 0.1')
+pygame.display.set_caption('SpaceWar!')
 pygame.display.set_icon(pygame.image.load('Graphics/player1_01.png'))
-
 
 # randomise background
 background_index = randint(1, 3)
@@ -55,6 +54,9 @@ player.add(Player())
 
 cursor = pygame.sprite.Group()
 cursor.add(PlayerCursor())
+
+hint = pygame.sprite.Group()
+hint.add(GuiObject(type_of_object='hint'))
 
 # Main loop
 while True:
@@ -93,6 +95,8 @@ while True:
         arcade.draw(screen)
         campaign.draw(screen)
         settings.draw(screen)
+        hint.draw(screen)
+
         cursor.draw(screen)
         cursor.update(index=cursor_index)
 
