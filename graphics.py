@@ -48,7 +48,7 @@ class GuiObject(pygame.sprite.Sprite):
                 self.rect = self.image.get_rect(center=(resolution[0] / 2, resolution[1] / 1.6 + 106))
 
         if type_of_object == 'hint':
-            self.image = pygame.transform.scale(pygame.image.load('Graphics/hint.png'), (564, 44))
+            self.image = pygame.transform.scale(pygame.image.load('Graphics/hint.png'), (423, 33))
             self.rect = self.image.get_rect(bottomleft=(0, resolution[1]))
 
     def animate(self):

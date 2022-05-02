@@ -146,3 +146,8 @@ class PlayerCursor(pygame.sprite.Sprite):
 
         self.image = pygame.transform.rotate(self.animation_frames[int(self.player_animation_index)], 90)
         self.rect = self.image.get_rect(center=(self.x, self.y))
+
+
+class LaserPlayer(pygame.sprite.Sprite):
+    def __int__(self):
+        super().__init__()
