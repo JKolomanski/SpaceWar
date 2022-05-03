@@ -20,45 +20,53 @@ class GuiObject(pygame.sprite.Sprite):
 
         if type_of_object == 'press_any_key':
             self.animation_index = 0
-            press_any_key_0 = pygame.transform.scale(pygame.image.load('Graphics/press_any_key_0.png'), (200, 36))\
+            press_any_key_0 = pygame.transform.scale(pygame.image.load('Graphics/GUI/press_any_key_0.png'), (200, 36))\
                 .convert()
-            press_any_key_1 = pygame.transform.scale(pygame.image.load('Graphics/press_any_key_1.png'), (200, 36))\
+            press_any_key_1 = pygame.transform.scale(pygame.image.load('Graphics/GUI/press_any_key_1.png'), (200, 36))\
                 .convert()
             self.animation_frames = [press_any_key_0, press_any_key_1]
             self.image = self.animation_frames[self.animation_index]
             self.rect = self.image.get_rect(midtop=(resolution[0] / 2, resolution[1] / 1.5))
 
         if type_of_object == 'logo':
-            logo = pygame.transform.scale(pygame.image.load('Graphics/spacewar_logo.png'), (420, 300))\
+            logo = pygame.transform.scale(pygame.image.load('Graphics/GUI/spacewar_logo.png'), (420, 300))\
                 .convert()
             self.image = logo
             self.rect = self.image.get_rect(midtop=(resolution[0] / 2, resolution[1] / 24))
 
         if type_of_object == 'menu_button':
             self.animation_index = 0
+
             if type_of_button == 'arcade':
-                arcade_1 = pygame.transform.scale(pygame.image.load('Graphics/arcade.png').convert(), (196, 44))
-                arcade_2 = pygame.transform.scale(pygame.image.load('Graphics/arcade_02.png').convert(), (196, 44))
+                arcade_1 = pygame.transform.scale(pygame.image.load('Graphics/GUI/arcade.png').convert(), (196, 44))
+                arcade_2 = pygame.transform.scale(pygame.image.load('Graphics/GUI/arcade_02.png').convert(), (196, 44))
+
                 self.animation_frames = [arcade_1, arcade_2]
                 self.image = self.animation_frames[self.animation_index]
                 self.rect = self.image.get_rect(center=(resolution[0] / 2, resolution[1] / 1.6))
 
             if type_of_button == 'campaign':
-                campaign_1 = pygame.transform.scale(pygame.image.load('Graphics/campaign.png').convert(), (236, 44))
-                campaign_2 = pygame.transform.scale(pygame.image.load('Graphics/campaign_02.png').convert(), (236, 44))
+                campaign_1 = pygame.transform.scale(pygame.image.load('Graphics/GUI/campaign.png')
+                                                    .convert(), (236, 44))
+                campaign_2 = pygame.transform.scale(pygame.image.load('Graphics/GUI/campaign_02.png')
+                                                    .convert(), (236, 44))
+
                 self.animation_frames = [campaign_1, campaign_2]
                 self.image = self.animation_frames[self.animation_index]
                 self.rect = self.image.get_rect(center=(resolution[0] / 2, resolution[1] / 1.6 + 53))
 
             if type_of_button == 'settings':
-                settings_1 = pygame.transform.scale(pygame.image.load('Graphics/settings.png').convert(), (148, 44))
-                settings_2 = pygame.transform.scale(pygame.image.load('Graphics/settings_02.png').convert(), (148, 44))
+                settings_1 = pygame.transform.scale(pygame.image.load('Graphics/GUI/settings.png')
+                                                    .convert(), (148, 44))
+                settings_2 = pygame.transform.scale(pygame.image.load('Graphics/GUI/settings_02.png')
+                                                    .convert(), (148, 44))
+
                 self.animation_frames = [settings_1, settings_2]
                 self.image = self.animation_frames[self.animation_index]
                 self.rect = self.image.get_rect(center=(resolution[0] / 2, resolution[1] / 1.6 + 106))
 
         if type_of_object == 'hint':
-            self.image = pygame.transform.scale(pygame.image.load('Graphics/hint.png'), (423, 33))
+            self.image = pygame.transform.scale(pygame.image.load('Graphics/GUI/hint.png'), (423, 33))
             self.rect = self.image.get_rect(bottomleft=(0, resolution[1]))
 
     def animate(self):

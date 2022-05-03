@@ -22,10 +22,14 @@ class Player(pygame.sprite.Sprite):
         self.max_speed = 6
 
         # if self.player_level == 1:
-        self.player_off = pygame.transform.scale(pygame.image.load('Graphics/player1_00.png'), (64, 64)).convert_alpha()
-        player_on1 = pygame.transform.scale(pygame.image.load('Graphics/player1_01.png'), (64, 64)).convert_alpha()
-        player_on2 = pygame.transform.scale(pygame.image.load('Graphics/player1_02.png'), (64, 64)).convert_alpha()
-        player_on3 = pygame.transform.scale(pygame.image.load('Graphics/player1_03.png'), (64, 64)).convert_alpha()
+        self.player_off = pygame.transform.scale(pygame.image.load('Graphics/Player/player1_00.png'), (64, 64))\
+            .convert_alpha()
+        player_on1 = pygame.transform.scale(pygame.image.load('Graphics/Player/player1_01.png'), (64, 64))\
+            .convert_alpha()
+        player_on2 = pygame.transform.scale(pygame.image.load('Graphics/Player/player1_02.png'), (64, 64))\
+            .convert_alpha()
+        player_on3 = pygame.transform.scale(pygame.image.load('Graphics/Player/player1_03.png'), (64, 64))\
+            .convert_alpha()
 
         self.animation_frames = [player_on1, player_on2, player_on3]
         self.image = self.animation_frames[self.player_animation_index]
@@ -121,9 +125,12 @@ class PlayerCursor(pygame.sprite.Sprite):
         self.x = resolution[0] / 2 - 160
         self.y = resolution[1] / 1.6
 
-        player_on1 = pygame.transform.scale(pygame.image.load('Graphics/player1_01.png'), (64, 64)).convert_alpha()
-        player_on2 = pygame.transform.scale(pygame.image.load('Graphics/player1_02.png'), (64, 64)).convert_alpha()
-        player_on3 = pygame.transform.scale(pygame.image.load('Graphics/player1_03.png'), (64, 64)).convert_alpha()
+        player_on1 = pygame.transform.scale(pygame.image.load('Graphics/Player/player1_01.png'), (64, 64))\
+            .convert_alpha()
+        player_on2 = pygame.transform.scale(pygame.image.load('Graphics/Player/player1_02.png'), (64, 64))\
+            .convert_alpha()
+        player_on3 = pygame.transform.scale(pygame.image.load('Graphics/Player/player1_03.png'), (64, 64))\
+            .convert_alpha()
         self.player_animation_index = 0
         self.animation_frames = [player_on1, player_on2, player_on3]
 

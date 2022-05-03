@@ -22,16 +22,16 @@ gamemode = 0
 # screen, icon, display caption
 screen = pygame.display.set_mode(resolution)
 pygame.display.set_caption('SpaceWar!')
-pygame.display.set_icon(pygame.image.load('Graphics/player1_01.png'))
+pygame.display.set_icon(pygame.image.load('Graphics/Player/player1_01.png'))
 
 # randomise background
 background_index = randint(1, 3)
 if background_index == 1:
-    menu_background = pygame.image.load('Graphics/background_earth.png').convert()
+    menu_background = pygame.image.load('Graphics/Backgrounds/background_earth.png').convert()
 elif background_index == 2:
-    menu_background = pygame.image.load('Graphics/background_moon.png').convert()
+    menu_background = pygame.image.load('Graphics/Backgrounds/background_moon.png').convert()
 else:
-    menu_background = pygame.image.load('Graphics/background_mars.png').convert()
+    menu_background = pygame.image.load('Graphics/Backgrounds/background_mars.png').convert()
 
 # assign classes
 logo = pygame.sprite.Group()
