@@ -74,9 +74,9 @@ while True:
         # main menu
         if gamemode == 1:
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_w or event.key == pygame.K_UP and cursor_index > 0:
+                if event.key == pygame.K_w and cursor_index > 0 or event.key == pygame.K_UP and cursor_index > 0:
                     cursor_index -= 1
-                if event.key == pygame.K_s or event.key == pygame.K_DOWN and cursor_index < 2:
+                if event.key == pygame.K_s and cursor_index < 2 or event.key == pygame.K_DOWN and cursor_index < 2:
                     cursor_index += 1
                 if cursor_index == 0 and event.key == pygame.K_SPACE:
                     gamemode = 2
@@ -86,16 +86,20 @@ while True:
         screen.blit(menu_background, (0, 0))
         logo.draw(screen)
         press_any_key_button.draw(screen)
-        press_any_key_button.update('press_any_key')
+        press_any_key_button.update(type_of_object='press_any_key')
 
     # main menu
     elif gamemode == 1:
         screen.blit(menu_background, (0, 0))
         logo.draw(screen)
-        arcade.draw(screen)
-        campaign.draw(screen)
-        settings.draw(screen)
         hint.draw(screen)
+
+        arcade.draw(screen)
+        arcade.update(type_of_object='menu_button', type_of_button='arcade', index=cursor_index)
+        campaign.draw(screen)
+        campaign.update(type_of_object='menu_button', type_of_button='campaign', index=cursor_index)
+        settings.draw(screen)
+        settings.update(type_of_object='menu_button', type_of_button='settings', index=cursor_index)
 
         cursor.draw(screen)
         cursor.update(index=cursor_index)

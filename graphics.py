@@ -35,16 +35,26 @@ class GuiObject(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(midtop=(resolution[0] / 2, resolution[1] / 24))
 
         if type_of_object == 'menu_button':
+            self.animation_index = 0
             if type_of_button == 'arcade':
-                self.image = pygame.transform.scale(pygame.image.load('Graphics/arcade.png'), (196, 44))
+                arcade_1 = pygame.transform.scale(pygame.image.load('Graphics/arcade.png').convert(), (196, 44))
+                arcade_2 = pygame.transform.scale(pygame.image.load('Graphics/arcade_02.png').convert(), (196, 44))
+                self.animation_frames = [arcade_1, arcade_2]
+                self.image = self.animation_frames[self.animation_index]
                 self.rect = self.image.get_rect(center=(resolution[0] / 2, resolution[1] / 1.6))
 
             if type_of_button == 'campaign':
-                self.image = pygame.transform.scale(pygame.image.load('Graphics/campaign.png'), (236, 44))
+                campaign_1 = pygame.transform.scale(pygame.image.load('Graphics/campaign.png').convert(), (236, 44))
+                campaign_2 = pygame.transform.scale(pygame.image.load('Graphics/campaign_02.png').convert(), (236, 44))
+                self.animation_frames = [campaign_1, campaign_2]
+                self.image = self.animation_frames[self.animation_index]
                 self.rect = self.image.get_rect(center=(resolution[0] / 2, resolution[1] / 1.6 + 53))
 
             if type_of_button == 'settings':
-                self.image = pygame.transform.scale(pygame.image.load('Graphics/settings.png'), (148, 44))
+                settings_1 = pygame.transform.scale(pygame.image.load('Graphics/settings.png').convert(), (148, 44))
+                settings_2 = pygame.transform.scale(pygame.image.load('Graphics/settings_02.png').convert(), (148, 44))
+                self.animation_frames = [settings_1, settings_2]
+                self.image = self.animation_frames[self.animation_index]
                 self.rect = self.image.get_rect(center=(resolution[0] / 2, resolution[1] / 1.6 + 106))
 
         if type_of_object == 'hint':
@@ -57,6 +67,14 @@ class GuiObject(pygame.sprite.Sprite):
             self.animation_index = 0
         self.image = self.animation_frames[int(self.animation_index)]
 
-    def update(self, type_of_object):
+    def update(self, type_of_object, type_of_button=None, index=None):
         if type_of_object == 'press_any_key':
             self.animate()
+
+        if type_of_button == 'arcade' and index == 0 or type_of_button == 'campaign' and index == 1 \
+                or type_of_button == 'settings' and index == 2:
+            self.animation_index = 0
+            self.image = self.animation_frames[self.animation_index]
+        elif type_of_object == 'menu_button':
+            self.animation_index = 1
+            self.image = self.animation_frames[self.animation_index]
