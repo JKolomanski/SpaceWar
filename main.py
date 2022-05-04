@@ -16,22 +16,23 @@ cursor_index = 0
 gamemode = 0
 # gamemode 0 = start menu
 # gamemode 1 = main menu
-# gamemode 2 = arcade mode
-# gamemode 3 = campaign mode
+# gamemode 2 = settings
+# gamemode 3 = arcade mode
+# gamemode 4 = campaign mode
 
 # screen, icon, display caption
 screen = pygame.display.set_mode(resolution)
 pygame.display.set_caption('SpaceWar!')
-pygame.display.set_icon(pygame.image.load('Graphics/Player/player1_01.png'))
+pygame.display.set_icon(pygame.image.load('Assets/Player/player1_01.png'))
 
 # randomise background
 background_index = randint(1, 3)
 if background_index == 1:
-    menu_background = pygame.image.load('Graphics/Backgrounds/background_earth.png').convert()
+    menu_background = pygame.image.load('Assets/Backgrounds/background_earth.png').convert()
 elif background_index == 2:
-    menu_background = pygame.image.load('Graphics/Backgrounds/background_moon.png').convert()
+    menu_background = pygame.image.load('Assets/Backgrounds/background_moon.png').convert()
 else:
-    menu_background = pygame.image.load('Graphics/Backgrounds/background_mars.png').convert()
+    menu_background = pygame.image.load('Assets/Backgrounds/background_mars.png').convert()
 
 # assign classes
 logo = pygame.sprite.Group()
@@ -79,7 +80,7 @@ while True:
                 if event.key == pygame.K_s and cursor_index < 2 or event.key == pygame.K_DOWN and cursor_index < 2:
                     cursor_index += 1
                 if cursor_index == 0 and event.key == pygame.K_SPACE:
-                    gamemode = 2
+                    gamemode = 3
 
     # start menu
     if gamemode == 0:
@@ -105,7 +106,7 @@ while True:
         cursor.update(index=cursor_index)
 
     # arcade mode
-    elif gamemode == 2:
+    elif gamemode == 3:
         screen.blit(menu_background, (0, 0))
         player.draw(screen)
         player.update()
