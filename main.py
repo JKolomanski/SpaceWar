@@ -64,6 +64,9 @@ settings.add(GuiObject(type_of_object='menu_button', type_of_button='settings'))
 hint = pygame.sprite.Group()
 hint.add(GuiObject(type_of_object='hint'))
 
+energy_frame = pygame.sprite.Group()
+energy_frame.add(GuiObject(type_of_object='energy_frame'))
+
 cursor = pygame.sprite.Group()
 cursor.add(PlayerCursor())
 
@@ -138,6 +141,11 @@ while True:
             laser_player_group.add(LaserPlayer(x=player_x, y=player_y, angle=player_angle))
 
         screen.blit(menu_background, (0, 0))
+
+        energy_frame.draw(screen)
+        energy_bar = pygame.Surface((player.sprite.energy, 20))
+        energy_bar.fill('White')
+        screen.blit(energy_bar, (12, 12))
 
         laser_player_group.update()
         laser_player_group.draw(screen)
