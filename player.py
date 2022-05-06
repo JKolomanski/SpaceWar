@@ -37,6 +37,13 @@ class Player(pygame.sprite.Sprite):
         self.image = self.animation_frames[self.player_animation_index]
         self.rect = self.image.get_rect(center=(self.x, self.y))
 
+        self.shoot_sound = pygame.mixer.Sound('Assets/Sounds/shoot.wav')
+        self.shoot_sound.set_volume(0.2)
+
+        self.engine_sound = pygame.mixer.Sound('Assets/Sounds/engine_sound.wav')
+        self.engine_sound.set_volume(0.2)
+        self.engine_sound_delay = 0
+
     def going_forward(self):
         keys = pygame.key.get_pressed()
 
@@ -54,6 +61,11 @@ class Player(pygame.sprite.Sprite):
 
             self.dx += ax * 0.1
             self.dy += ay * 0.1
+
+            if not self.engine_sound_delay:
+                self.engine_sound.play()
+                self.engine_sound_delay = 270
+            self.engine_sound_delay -= 1
 
         elif not keys[pygame.K_w]:
             self.image = self.player_off
@@ -121,6 +133,7 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_SPACE] and not self.cooldown:
             self.cooldown = 30
             self.shooting = True
+            self.shoot_sound.play()
         else:
             self.shooting = False
 

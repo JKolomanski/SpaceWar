@@ -26,6 +26,13 @@ elif background_index == 2:
 else:
     menu_background = pygame.image.load('Assets/Backgrounds/background_mars.png').convert()
 
+# sounds
+choose_sound = pygame.mixer.Sound('Assets/Sounds/menu_choose.wav')
+choose_sound.set_volume(0.5)
+
+cursor_sound = pygame.mixer.Sound('Assets/Sounds/cursor_sound.wav')
+cursor_sound.set_volume(0.2)
+
 # Variables
 clock = pygame.time.Clock()
 cursor_index = 0
@@ -76,6 +83,7 @@ while True:
         # start menu
         if gamemode == 0:
             if event.type == pygame.KEYDOWN:
+                choose_sound.play()
                 gamemode = 1
 
         # main menu
@@ -83,10 +91,13 @@ while True:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w and cursor_index > 0 or event.key == pygame.K_UP and cursor_index > 0:
                     cursor_index -= 1
+                    cursor_sound.play()
                 if event.key == pygame.K_s and cursor_index < 2 or event.key == pygame.K_DOWN and cursor_index < 2:
                     cursor_index += 1
+                    cursor_sound.play()
                 if cursor_index == 0 and event.key == pygame.K_SPACE:
                     gamemode = 3
+                    choose_sound.play()
 
     # start menu
     if gamemode == 0:
