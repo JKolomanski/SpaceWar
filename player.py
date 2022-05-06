@@ -162,7 +162,6 @@ class Player(pygame.sprite.Sprite):
         self.going_forward()
         self.turning()
         self.calculating_position()
-        print(self.energy)
 
 
 class LaserPlayer(pygame.sprite.Sprite):
@@ -195,7 +194,7 @@ class LaserPlayer(pygame.sprite.Sprite):
 
     def update(self):
         self.image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load
-                                                                    ('Assets/Player/laser_player.png'), (12, 28))
+                                                                    ('Assets/Player/laser_player_green.png'), (12, 28))
                                              .convert_alpha(), self.angle)
         self.rect = self.image.get_rect(center=(self.x, self.y))
 
