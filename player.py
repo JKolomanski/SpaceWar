@@ -47,10 +47,6 @@ class Player(pygame.sprite.Sprite):
         self.shoot_sound = pygame.mixer.Sound('Assets/Sounds/shoot.wav')
         self.shoot_sound.set_volume(0.2)
 
-        self.engine_sound = pygame.mixer.Sound('Assets/Sounds/engine_sound.wav')
-        self.engine_sound.set_volume(0.2)
-        self.engine_sound_delay = 0
-
     def going_forward(self):
         keys = pygame.key.get_pressed()
 
@@ -71,25 +67,16 @@ class Player(pygame.sprite.Sprite):
 
             self.energy -= 1
 
-            if not self.engine_sound_delay:
-                self.engine_sound.play()
-                self.engine_sound_delay = 480
-            self.engine_sound_delay -= 1
-
         elif not keys[pygame.K_w]:
             self.engine = True
             if self.energy < 480:
                 self.energy += self.energy_regen
             self.image = self.player_off
-            self.engine_sound.fadeout(400)
-            self.engine_sound_delay = 0
 
         elif keys[pygame.K_w] and self.energy == 0 or keys[pygame.K_w] and not self.engine:
             self.engine = False
             self.energy += self.energy_regen
             self.image = self.player_off
-            self.engine_sound.fadeout(400)
-            self.engine_sound_delay = 0
 
         if self.energy > 480:
             self.energy = 480
