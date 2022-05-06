@@ -3,24 +3,16 @@ import pygame
 from random import randint
 from sys import exit
 
-from player import Player, PlayerCursor
+from player import Player, PlayerCursor, LaserPlayer
 from graphics import GuiObject, get_resolution
 
 pygame.init()
 
-# Variables
-get_resolution()
-resolution = [get_resolution()[0], get_resolution()[1]]
-clock = pygame.time.Clock()
-cursor_index = 0
-gamemode = 0
-# gamemode 0 = start menu
-# gamemode 1 = main menu
-# gamemode 2 = settings
-# gamemode 3 = arcade mode
-# gamemode 4 = campaign mode
 
 # screen, icon, display caption
+get_resolution()
+resolution = [get_resolution()[0], get_resolution()[1]]
+
 screen = pygame.display.set_mode(resolution)
 pygame.display.set_caption('SpaceWar!')
 pygame.display.set_icon(pygame.image.load('Assets/Player/player1_01.png'))
@@ -34,7 +26,18 @@ elif background_index == 2:
 else:
     menu_background = pygame.image.load('Assets/Backgrounds/background_mars.png').convert()
 
-# assign classes
+# Variables
+clock = pygame.time.Clock()
+cursor_index = 0
+gamemode = 0
+# gamemode 0 = start menu
+# gamemode 1 = main menu
+# gamemode 2 = settings
+# gamemode 3 = arcade mode
+# gamemode 4 = campaign mode
+font = pygame.font.Font('Assets/Spacewarfont/spacewarfont.ttf', 25)
+
+# Groups
 logo = pygame.sprite.Group()
 logo.add(GuiObject(type_of_object='logo'))
 
@@ -50,14 +53,17 @@ campaign.add(GuiObject(type_of_object='menu_button', type_of_button='campaign'))
 settings = pygame.sprite.Group()
 settings.add(GuiObject(type_of_object='menu_button', type_of_button='settings'))
 
-player = pygame.sprite.GroupSingle()
-player.add(Player())
+hint = pygame.sprite.Group()
+hint.add(GuiObject(type_of_object='hint'))
 
 cursor = pygame.sprite.Group()
 cursor.add(PlayerCursor())
 
-hint = pygame.sprite.Group()
-hint.add(GuiObject(type_of_object='hint'))
+player = pygame.sprite.GroupSingle()
+player.add(Player())
+
+laser_player_group = pygame.sprite.Group()
+laser_player_group.add(LaserPlayer(-50, -50, 0))
 
 # Main loop
 while True:
@@ -107,7 +113,19 @@ while True:
 
     # arcade mode
     elif gamemode == 3:
+
+        # player shooting
+        if player.sprite.shooting:
+            player_x = player.sprite.x
+            player_y = player.sprite.y
+            player_angle = player.sprite.player_angle
+            laser_player_group.add(LaserPlayer(x=player_x, y=player_y, angle=player_angle))
+
         screen.blit(menu_background, (0, 0))
+
+        laser_player_group.update()
+        laser_player_group.draw(screen)
+
         player.draw(screen)
         player.update()
 

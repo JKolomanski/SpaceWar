@@ -21,7 +21,9 @@ class Player(pygame.sprite.Sprite):
         self.player_animation_index = 0
         self.max_speed = 6
 
-        # if self.player_level == 1:
+        self.cooldown = 30
+        self.shooting = False
+
         self.player_off = pygame.transform.scale(pygame.image.load('Assets/Player/player1_00.png'), (64, 64))\
             .convert_alpha()
         player_on1 = pygame.transform.scale(pygame.image.load('Assets/Player/player1_01.png'), (64, 64))\
@@ -96,7 +98,7 @@ class Player(pygame.sprite.Sprite):
             self.y += -self.max_speed
             self.dy = -self.max_speed
 
-        # fun fact: this game is played on a torus (a.k.a a donut)!
+        # looping the screen
         if self.x > resolution[0] + 20:
             self.x = -20
         if self.x < -20:
@@ -110,9 +112,59 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.image, self.player_angle)
         self.rect = self.image.get_rect(center=(self.x, self.y))
 
+    def shoot(self):
+        keys = pygame.key.get_pressed()
+
+        if self.cooldown:
+            self.cooldown -= 1
+
+        if keys[pygame.K_SPACE] and not self.cooldown:
+            self.cooldown = 30
+            self.shooting = True
+        else:
+            self.shooting = False
+
     def update(self):
         self.going_forward()
         self.turning()
+        self.calculating_position()
+        self.shoot()
+
+
+class LaserPlayer(pygame.sprite.Sprite):
+    def __init__(self, x, y, angle):
+        super().__init__()
+
+        self.x = x
+        self.y = y
+        self.angle = angle
+
+        self.ax = math.cos(math.radians(self.angle - 90))
+        self.ay = -math.sin(math.radians(self.angle - 90))
+
+        self.dx = self.ax * 10
+        self.dy = self.ay * 10
+
+        self.x += self.dx
+        self.y += self.dy
+
+    def calculating_position(self):
+
+        self.dx += self.ax * 0.8
+        self.dy += self.ay * 0.8
+
+        self.x += self.dx
+        self.y += self.dy
+
+        if self.x < -20 or self.x > resolution[0] + 20 or self.y < -20 or self.y > resolution[1] + 20:
+            self.kill()
+
+    def update(self):
+        self.image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load
+                                                                    ('Assets/Player/laser_player.png'), (12, 28))
+                                             .convert_alpha(), self.angle)
+        self.rect = self.image.get_rect(center=(self.x, self.y))
+
         self.calculating_position()
 
 
@@ -153,8 +205,3 @@ class PlayerCursor(pygame.sprite.Sprite):
 
         self.image = pygame.transform.rotate(self.animation_frames[int(self.player_animation_index)], 90)
         self.rect = self.image.get_rect(center=(self.x, self.y))
-
-
-class LaserPlayer(pygame.sprite.Sprite):
-    def __int__(self):
-        super().__init__()
