@@ -71,7 +71,7 @@ class Player(pygame.sprite.Sprite):
 
         elif not keys[pygame.K_w]:
             if self.energy < 240:
-                self.energy += 5
+                self.energy += 4
             self.image = self.player_off
             self.engine_sound.fadeout(400)
             self.engine_sound_delay = 0
