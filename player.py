@@ -64,11 +64,13 @@ class Player(pygame.sprite.Sprite):
 
             if not self.engine_sound_delay:
                 self.engine_sound.play()
-                self.engine_sound_delay = 270
+                self.engine_sound_delay = 292
             self.engine_sound_delay -= 1
 
         elif not keys[pygame.K_w]:
             self.image = self.player_off
+            self.engine_sound.fadeout(400)
+            self.engine_sound_delay = 0
 
     def turning(self):
         keys = pygame.key.get_pressed()
