@@ -31,7 +31,7 @@ choose_sound = pygame.mixer.Sound('Assets/Sounds/menu_choose.wav')
 choose_sound.set_volume(0.5)
 
 cursor_sound = pygame.mixer.Sound('Assets/Sounds/cursor_sound.wav')
-cursor_sound.set_volume(0.2)
+cursor_sound.set_volume(0.1)
 
 # Variables
 clock = pygame.time.Clock()
