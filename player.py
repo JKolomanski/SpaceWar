@@ -21,9 +21,15 @@ class Player(pygame.sprite.Sprite):
         self.player_animation_index = 0
         self.max_speed = 6
 
-        self.energy = 240
+        self.max_energy = 480
+        self.energy = self.max_energy
+        self.energy_regen = 5
+        self.max_energy_regen = self.energy_regen
+
         self.cooldown = 30
         self.shooting = False
+
+        self.engine = False
 
         self.player_off = pygame.transform.scale(pygame.image.load('Assets/Player/player1_00.png'), (64, 64))\
             .convert_alpha()
@@ -49,7 +55,8 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
 
         # going forward
-        if keys[pygame.K_w] and self.energy > 0:
+        if keys[pygame.K_w] and self.energy > 0 and self.engine:
+            self.engine = True
             self.player_animation_index += 0.3
             if self.player_animation_index >= len(self.animation_frames):
                 self.player_animation_index = 0
@@ -66,23 +73,26 @@ class Player(pygame.sprite.Sprite):
 
             if not self.engine_sound_delay:
                 self.engine_sound.play()
-                self.engine_sound_delay = 240
+                self.engine_sound_delay = 480
             self.engine_sound_delay -= 1
 
         elif not keys[pygame.K_w]:
-            if self.energy < 240:
-                self.energy += 4
+            self.engine = True
+            if self.energy < 480:
+                self.energy += self.energy_regen
             self.image = self.player_off
             self.engine_sound.fadeout(400)
             self.engine_sound_delay = 0
 
-        elif keys[pygame.K_w] and self.energy == 0:
+        elif keys[pygame.K_w] and self.energy == 0 or keys[pygame.K_w] and not self.engine:
+            self.engine = False
+            self.energy += self.energy_regen
             self.image = self.player_off
             self.engine_sound.fadeout(400)
             self.engine_sound_delay = 0
 
-        if self.energy > 240:
-            self.energy = 240
+        if self.energy > 480:
+            self.energy = 480
 
     def turning(self):
         keys = pygame.key.get_pressed()
@@ -148,14 +158,23 @@ class Player(pygame.sprite.Sprite):
             self.cooldown = 30
             self.shooting = True
             self.shoot_sound.play()
+            if self.energy > 5:
+                self.energy -= 5
+            else:
+                self.energy = 0
         else:
             self.shooting = False
 
+        if self.cooldown == 0:
+            self.energy_regen = self.max_energy_regen
+        else:
+            self.energy_regen = 0
+
     def update(self):
+        self.shoot()
         self.going_forward()
         self.turning()
         self.calculating_position()
-        self.shoot()
         print(self.energy)
 
 

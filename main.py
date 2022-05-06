@@ -142,8 +142,11 @@ while True:
 
         screen.blit(menu_background, (0, 0))
 
+        energy = player.sprite.energy / 2
+        if energy < 0:
+            energy = 0
         energy_frame.draw(screen)
-        energy_bar = pygame.Surface((player.sprite.energy, 20))
+        energy_bar = pygame.Surface((energy, 20))
         energy_bar.fill('White')
         screen.blit(energy_bar, (12, 12))
 
