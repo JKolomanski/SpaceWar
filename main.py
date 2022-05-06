@@ -43,6 +43,7 @@ gamemode = 0
 # gamemode 3 = arcade mode
 # gamemode 4 = campaign mode
 font = pygame.font.Font('Assets/Spacewarfont/spacewarfont.ttf', 25)
+deadzone = 5
 
 # Groups
 logo = pygame.sprite.Group()
@@ -74,6 +75,8 @@ laser_player_group.add(LaserPlayer(-50, -50, 0))
 
 # Main loop
 while True:
+    if deadzone > 0:
+        deadzone -= 1
     # Event loop
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -82,13 +85,14 @@ while True:
 
         # start menu
         if gamemode == 0:
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN and not deadzone:
                 choose_sound.play()
                 gamemode = 1
+                deadzone = 5
 
         # main menu
         if gamemode == 1:
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN and not deadzone:
                 if event.key == pygame.K_w and cursor_index > 0 or event.key == pygame.K_UP and cursor_index > 0:
                     cursor_index -= 1
                     cursor_sound.play()
@@ -98,6 +102,7 @@ while True:
                 if cursor_index == 0 and event.key == pygame.K_SPACE:
                     gamemode = 3
                     choose_sound.play()
+                deadzone = 5
 
     # start menu
     if gamemode == 0:
