@@ -1,3 +1,5 @@
+import random
+
 import pygame
 # import time
 from random import randint
@@ -5,8 +7,18 @@ from sys import exit
 
 from player import Player, PlayerCursor, LaserPlayer
 from graphics import GuiObject, get_resolution
+from meteorites import Meteorite
 
 pygame.init()
+
+
+def collision_meteorite():
+    if pygame.sprite.spritecollide(player.sprite, meteorite_group, False):
+        return 2
+    elif pygame.sprite.groupcollide(laser_player_group, meteorite_group, False, False):
+        return 1
+    else:
+        return 0
 
 
 # screen, icon, display caption
@@ -75,6 +87,9 @@ player.add(Player())
 
 laser_player_group = pygame.sprite.Group()
 laser_player_group.add(LaserPlayer(-50, -50, 0))
+
+meteorite_group = pygame.sprite.Group()
+meteorite_group.add(Meteorite(0))
 
 # Main loop
 while True:
@@ -152,6 +167,13 @@ while True:
 
         laser_player_group.update()
         laser_player_group.draw(screen)
+
+        if len(meteorite_group) == 0:
+            meteorite_group.add(Meteorite(size=random.randint(0, 1)))
+
+        meteorite_group.draw(screen)
+        meteorite_group.update(colliding=collision_meteorite())
+        print(meteorite_group)
 
         player.draw(screen)
         player.update()
