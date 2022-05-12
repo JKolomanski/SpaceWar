@@ -1,8 +1,6 @@
 import random
-
 import pygame
 # import time
-from random import randint
 from sys import exit
 
 from player import Player, PlayerCursor, LaserPlayer
@@ -10,16 +8,6 @@ from graphics import GuiObject, get_resolution
 from meteorites import Meteorite
 
 pygame.init()
-
-
-def collision_meteorite():
-    if pygame.sprite.spritecollide(player.sprite, meteorite_group, False):
-        return 2
-    elif pygame.sprite.groupcollide(laser_player_group, meteorite_group, False, False):
-        return 1
-    else:
-        return 0
-
 
 # screen, icon, display caption
 get_resolution()
@@ -30,7 +18,7 @@ pygame.display.set_caption('SpaceWar!')
 pygame.display.set_icon(pygame.image.load('Assets/Player/player1_01.png'))
 
 # randomise background
-background_index = randint(1, 3)
+background_index = random.randint(1, 3)
 if background_index == 1:
     menu_background = pygame.image.load('Assets/Backgrounds/background_earth.png').convert()
 elif background_index == 2:
@@ -54,8 +42,10 @@ gamemode = 0
 # gamemode 2 = settings
 # gamemode 3 = arcade mode
 # gamemode 4 = campaign mode
+# gamemode 5 = game over screen
 font = pygame.font.Font('Assets/Spacewarfont/spacewarfont.ttf', 25)
 deadzone = 5
+meteorite_index = 0
 
 # Groups
 logo = pygame.sprite.Group()
@@ -88,8 +78,9 @@ player.add(Player())
 laser_player_group = pygame.sprite.Group()
 laser_player_group.add(LaserPlayer(-50, -50, 0))
 
-meteorite_group = pygame.sprite.Group()
-meteorite_group.add(Meteorite(0))
+initial_meteorite = pygame.sprite.GroupSingle()
+initial_meteorite.add(Meteorite(0))
+meteorite_group = [initial_meteorite]
 
 # Main loop
 while True:
@@ -147,6 +138,7 @@ while True:
 
     # arcade mode
     elif gamemode == 3:
+        screen.blit(menu_background, (0, 0))
 
         # player shooting
         if player.sprite.shooting:
@@ -155,8 +147,10 @@ while True:
             player_angle = player.sprite.player_angle
             laser_player_group.add(LaserPlayer(x=player_x, y=player_y, angle=player_angle))
 
-        screen.blit(menu_background, (0, 0))
+        laser_player_group.update()
+        laser_player_group.draw(screen)
 
+        # displaying energy bar
         energy = player.sprite.energy / 2
         if energy < 0:
             energy = 0
@@ -165,15 +159,49 @@ while True:
         energy_bar.fill('White')
         screen.blit(energy_bar, (12, 12))
 
-        laser_player_group.update()
-        laser_player_group.draw(screen)
+        # meteorites
+        for meteorite in meteorite_group:
+            meteorite.update()
+            if pygame.sprite.spritecollide(player.sprite, meteorite, False):
+                player.sprite.kill()
+            elif pygame.sprite.groupcollide(laser_player_group, meteorite, True, False):
 
-        if len(meteorite_group) == 0:
-            meteorite_group.add(Meteorite(size=random.randint(0, 1)))
+                # small meteorites
+                if meteorite.sprite.size == 1 and len(meteorite_group) < 5:
+                    meteorite_index = len(meteorite_group)
+                    meteorite_group.append(str(meteorite_index))
+                    meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
+                    meteorite_group[meteorite_index].add(Meteorite(random.randint(0, 1)))
 
-        meteorite_group.draw(screen)
-        meteorite_group.update(colliding=collision_meteorite())
-        print(meteorite_group)
+                # large meteorites
+                if meteorite.sprite.size == 0:
+                    meteorite_index = len(meteorite_group)
+                    meteorite_group.append(str(meteorite_index))
+                    meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
+                    meteorite_group[meteorite_index]\
+                        .add(Meteorite(1, True, meteorite.sprite.x, meteorite.sprite.y,
+                                       meteorite.sprite.starting_angle - 180))
+
+                    meteorite_index = len(meteorite_group)
+                    meteorite_group.append(str(meteorite_index))
+                    meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
+                    meteorite_group[meteorite_index]\
+                        .add(Meteorite(1, True, meteorite.sprite.x, meteorite.sprite.y,
+                                       meteorite.sprite.starting_angle - 60))
+
+                    meteorite_index = len(meteorite_group)
+                    meteorite_group.append(str(meteorite_index))
+                    meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
+                    meteorite_group[meteorite_index]\
+                        .add(Meteorite(1, True, meteorite.sprite.x, meteorite.sprite.y,
+                                       meteorite.sprite.starting_angle - 300))
+
+                meteorite.sprite.kill()
+                del meteorite_group[meteorite_group.index(meteorite)]
+
+        # separate for loop to prevent meteorites from flickering
+        for meteorite in meteorite_group:
+            meteorite.draw(screen)
 
         player.draw(screen)
         player.update()

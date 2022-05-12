@@ -8,25 +8,32 @@ resolution = [get_resolution()[0], get_resolution()[1]]
 
 
 class Meteorite(pygame.sprite.Sprite):
-    def __init__(self, size):
+    def __init__(self, size, child=None, x=None, y=None, angle=None):
         super().__init__()
 
-        self.angle = random.randint(-360, 360)
-        self.starting_angle = self.angle
         self.rotation_speed = random.randint(-100, 100) / 100
 
-        self.x = random.randint(-70, resolution[0] + 70)
-        if resolution[0] + 50 > self.x > -50:
-            self.y = random.choice([
-                random.randint(-70, -50), random.randint(resolution[1] + 50, resolution[1] + 70)])
+        if not child:
+            self.angle = random.randint(-360, 360)
+            self.starting_angle = self.angle
+
+            self.x = random.randint(-70, resolution[0] + 70)
+            if resolution[0] + 50 > self.x > -50:
+                self.y = random.choice([
+                    random.randint(-70, -50), random.randint(resolution[1] + 50, resolution[1] + 70)])
+            else:
+                self.y = random.randint(-70, resolution[1] + 70)
+
         else:
-            self.y = random.randint(-70, resolution[1] + 70)
+            self.angle = angle
+            self.starting_angle = angle
+            self.x = x
+            self.y = y
 
         self.dx = 0
         self.dy = 0
 
         self.size = size
-        self.colliding = 0
 
         # large meteorites
         if self.size == 0:
@@ -59,16 +66,7 @@ class Meteorite(pygame.sprite.Sprite):
             else:
                 self.y = random.randint(-70, resolution[1] + 70)
 
-    def detect_collision(self):
-        if self.colliding == 0:
-            pass
-        elif self.colliding == 1:
-            self.kill()
-        elif self.colliding == 2:
-            pass
-
-    def update(self, colliding):
-        self.colliding = colliding
+    def update(self):
         self.angle += self.rotation_speed
         if self.size == 0:
             self.image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load
@@ -82,4 +80,3 @@ class Meteorite(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(self.x, self.y))
 
         self.calculate_position()
-        self.detect_collision()
