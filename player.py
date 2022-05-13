@@ -50,7 +50,7 @@ class Player(pygame.sprite.Sprite):
     def going_forward(self):
         keys = pygame.key.get_pressed()
 
-        # going forward
+        # Going forward
         if keys[pygame.K_w] and self.energy > 0 and self.engine:
             self.engine = True
             self.player_animation_index += 0.3
@@ -84,18 +84,18 @@ class Player(pygame.sprite.Sprite):
     def turning(self):
         keys = pygame.key.get_pressed()
 
-        # turning left (counter-clockwise)
+        # Turning left (counter-clockwise)
         if keys[pygame.K_a]:
             self.player_angle += 5
 
-        # turning right (clockwise)
+        # Turning right (clockwise)
         if keys[pygame.K_d]:
             self.player_angle -= 5
 
     def calculating_position(self):
         global resolution
 
-        # for x axis
+        # For x axis
         if -self.max_speed < self.dx < self.max_speed or self.dx >= self.max_speed and (self.x + self.dx) < self.x or \
                 self.dx <= -self.max_speed and (self.x + self.dx) > self.x:
             self.x += self.dx
@@ -108,7 +108,7 @@ class Player(pygame.sprite.Sprite):
             self.x += -self.max_speed
             self.dx = -self.max_speed
 
-        # for y axis
+        # For y axis
         if -self.max_speed < self.dy < self.max_speed or self.dy >= self.max_speed and (self.y + self.dy) < self.y or \
                 self.dy <= -self.max_speed and (self.y + self.dy) > self.y:
             self.y += self.dy
@@ -121,7 +121,7 @@ class Player(pygame.sprite.Sprite):
             self.y += -self.max_speed
             self.dy = -self.max_speed
 
-        # looping the screen
+        # Looping the screen
         if self.x > resolution[0] + 20:
             self.x = -20
         if self.x < -20:
@@ -131,7 +131,7 @@ class Player(pygame.sprite.Sprite):
         if self.y < -20:
             self.y = resolution[1] + 20
 
-        # rotate the player image
+        # Rotate the player image
         self.image = pygame.transform.rotate(self.image, self.player_angle)
         self.rect = self.image.get_rect(center=(self.x, self.y))
 

@@ -8,7 +8,7 @@ resolution = [get_resolution()[0], get_resolution()[1]]
 
 
 class Meteorite(pygame.sprite.Sprite):
-    def __init__(self, size, child=None, x=None, y=None, angle=None):
+    def __init__(self, size, child=None, x=None, y=None, angle=None, speed=None):
         super().__init__()
 
         self.rotation_speed = random.randint(-100, 100) / 100
@@ -16,6 +16,7 @@ class Meteorite(pygame.sprite.Sprite):
         if not child:
             self.angle = random.randint(-360, 360)
             self.starting_angle = self.angle
+            self.speed = round(random.uniform(1, 3.5), 1)
 
             self.x = random.randint(-70, resolution[0] + 70)
             if resolution[0] + 50 > self.x > -50:
@@ -29,18 +30,19 @@ class Meteorite(pygame.sprite.Sprite):
             self.starting_angle = angle
             self.x = x
             self.y = y
+            self.speed = speed
 
         self.dx = 0
         self.dy = 0
 
         self.size = size
 
-        # large meteorites
+        # Large meteorites
         if self.size == 0:
             self.image = pygame.transform.scale(pygame.transform.rotate(
                 pygame.image.load('Assets/Meteorites/meteorite_large.png'), self.angle), (128, 128))
 
-        # small meteorites
+        # Small meteorites
         if self.size == 1:
             self.image = pygame.transform.scale(pygame.transform.rotate(
                 pygame.image.load('Assets/Meteorites/meteorite_small.png'), self.angle), (64, 64))
@@ -50,13 +52,13 @@ class Meteorite(pygame.sprite.Sprite):
         ax = math.cos(math.radians(self.starting_angle - 90))
         ay = -math.sin(math.radians(self.starting_angle - 90))
 
-        self.dx = ax * 3
-        self.dy = ay * 3
+        self.dx = ax * self.speed
+        self.dy = ay * self.speed
 
         self.x += self.dx
         self.y += self.dy
 
-        # looping the screen
+        # Looping the screen
         if self.x > resolution[0] + 70 or self.x < -70 or self.y > resolution[1] + 70 or self.y < -70:
             self.starting_angle = random.randint(0, 360)
             self.x = random.randint(-70, resolution[0] + 70)

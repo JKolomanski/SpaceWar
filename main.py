@@ -1,6 +1,5 @@
 import random
 import pygame
-# import time
 from sys import exit
 
 from player import Player, PlayerCursor, LaserPlayer
@@ -9,7 +8,7 @@ from meteorites import Meteorite
 
 pygame.init()
 
-# screen, icon, display caption
+# Screen, icon, display caption
 get_resolution()
 resolution = [get_resolution()[0], get_resolution()[1]]
 
@@ -17,7 +16,7 @@ screen = pygame.display.set_mode(resolution)
 pygame.display.set_caption('SpaceWar!')
 pygame.display.set_icon(pygame.image.load('Assets/Player/player1_01.png'))
 
-# randomise background
+# Randomise background
 background_index = random.randint(1, 3)
 if background_index == 1:
     menu_background = pygame.image.load('Assets/Backgrounds/background_earth.png').convert()
@@ -26,7 +25,7 @@ elif background_index == 2:
 else:
     menu_background = pygame.image.load('Assets/Backgrounds/background_mars.png').convert()
 
-# sounds
+# Sounds
 choose_sound = pygame.mixer.Sound('Assets/Sounds/menu_choose.wav')
 choose_sound.set_volume(0.5)
 
@@ -92,14 +91,14 @@ while True:
             pygame.quit()
             exit()
 
-        # start menu
+        # Start menu
         if gamemode == 0:
             if event.type == pygame.KEYDOWN and not deadzone:
                 choose_sound.play()
                 gamemode = 1
                 deadzone = 5
 
-        # main menu
+        # Main menu
         if gamemode == 1:
             if event.type == pygame.KEYDOWN and not deadzone:
                 if event.key == pygame.K_w and cursor_index > 0 or event.key == pygame.K_UP and cursor_index > 0:
@@ -113,14 +112,14 @@ while True:
                     choose_sound.play()
                 deadzone = 5
 
-    # start menu
+    # Start menu
     if gamemode == 0:
         screen.blit(menu_background, (0, 0))
         logo.draw(screen)
         press_any_key_button.draw(screen)
         press_any_key_button.update(type_of_object='press_any_key')
 
-    # main menu
+    # Main menu
     elif gamemode == 1:
         screen.blit(menu_background, (0, 0))
         logo.draw(screen)
@@ -136,11 +135,11 @@ while True:
         cursor.draw(screen)
         cursor.update(index=cursor_index)
 
-    # arcade mode
+    # Arcade mode
     elif gamemode == 3:
         screen.blit(menu_background, (0, 0))
 
-        # player shooting
+        # Player shooting
         if player.sprite.shooting:
             player_x = player.sprite.x
             player_y = player.sprite.y
@@ -150,7 +149,7 @@ while True:
         laser_player_group.update()
         laser_player_group.draw(screen)
 
-        # displaying energy bar
+        # Displaying energy bar
         energy = player.sprite.energy / 2
         if energy < 0:
             energy = 0
@@ -159,53 +158,53 @@ while True:
         energy_bar.fill('White')
         screen.blit(energy_bar, (12, 12))
 
-        # meteorites
+        # Meteorites
         for meteorite in meteorite_group:
             meteorite.update()
             if pygame.sprite.spritecollide(player.sprite, meteorite, False):
                 player.sprite.kill()
             elif pygame.sprite.groupcollide(laser_player_group, meteorite, True, False):
 
-                # small meteorites
+                # Small meteorites
                 if meteorite.sprite.size == 1 and len(meteorite_group) < 5:
                     meteorite_index = len(meteorite_group)
                     meteorite_group.append(str(meteorite_index))
                     meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
                     meteorite_group[meteorite_index].add(Meteorite(random.randint(0, 1)))
 
-                # large meteorites
+                # Large meteorites
                 if meteorite.sprite.size == 0:
                     meteorite_index = len(meteorite_group)
                     meteorite_group.append(str(meteorite_index))
                     meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
                     meteorite_group[meteorite_index]\
                         .add(Meteorite(1, True, meteorite.sprite.x, meteorite.sprite.y,
-                                       meteorite.sprite.starting_angle - 180))
+                                       meteorite.sprite.starting_angle - 180, meteorite.sprite.speed))
 
                     meteorite_index = len(meteorite_group)
                     meteorite_group.append(str(meteorite_index))
                     meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
                     meteorite_group[meteorite_index]\
                         .add(Meteorite(1, True, meteorite.sprite.x, meteorite.sprite.y,
-                                       meteorite.sprite.starting_angle - 60))
+                                       meteorite.sprite.starting_angle - 60, meteorite.sprite.speed))
 
                     meteorite_index = len(meteorite_group)
                     meteorite_group.append(str(meteorite_index))
                     meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
                     meteorite_group[meteorite_index]\
                         .add(Meteorite(1, True, meteorite.sprite.x, meteorite.sprite.y,
-                                       meteorite.sprite.starting_angle - 300))
+                                       meteorite.sprite.starting_angle - 300, meteorite.sprite.speed))
 
                 meteorite.sprite.kill()
                 del meteorite_group[meteorite_group.index(meteorite)]
 
-        # separate for loop to prevent meteorites from flickering
+        # Separate for loop to prevent meteorites from flickering
         for meteorite in meteorite_group:
             meteorite.draw(screen)
 
         player.draw(screen)
         player.update()
 
-    # refresh screen
+    # Refresh screen
     pygame.display.update()
     clock.tick(60)
