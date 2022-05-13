@@ -87,6 +87,7 @@ class Meteorite(pygame.sprite.Sprite):
 
     def update(self):
         self.angle += self.rotation_speed
+
         # Large meteorites
         if self.size == 0:
             if self.color == 0:
@@ -116,6 +117,7 @@ class Meteorite(pygame.sprite.Sprite):
                 self.image = pygame.transform.rotate(pygame.transform.scale
                                                      (pygame.image.load('Assets/Meteorites/meteorite_small_blue.png'),
                                                       (64, 64)).convert_alpha(), self.angle)
+
         self.rect = self.image.get_rect(center=(self.x, self.y))
 
         self.calculate_position()

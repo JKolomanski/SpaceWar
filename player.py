@@ -1,3 +1,5 @@
+import random
+
 import pygame
 import math
 from graphics import get_resolution
@@ -170,7 +172,7 @@ class LaserPlayer(pygame.sprite.Sprite):
 
         self.x = x
         self.y = y
-        self.angle = angle
+        self.angle = angle + random.randint(-5, 5)
 
         self.ax = math.cos(math.radians(self.angle - 90))
         self.ay = -math.sin(math.radians(self.angle - 90))
