@@ -179,21 +179,24 @@ while True:
                     meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
                     meteorite_group[meteorite_index]\
                         .add(Meteorite(1, True, meteorite.sprite.x, meteorite.sprite.y,
-                                       meteorite.sprite.starting_angle - 180, meteorite.sprite.speed))
+                                       meteorite.sprite.starting_angle - 180, meteorite.sprite.speed,
+                                       meteorite.sprite.color))
 
                     meteorite_index = len(meteorite_group)
                     meteorite_group.append(str(meteorite_index))
                     meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
                     meteorite_group[meteorite_index]\
                         .add(Meteorite(1, True, meteorite.sprite.x, meteorite.sprite.y,
-                                       meteorite.sprite.starting_angle - 60, meteorite.sprite.speed))
+                                       meteorite.sprite.starting_angle - 60, meteorite.sprite.speed,
+                                       meteorite.sprite.color))
 
                     meteorite_index = len(meteorite_group)
                     meteorite_group.append(str(meteorite_index))
                     meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
                     meteorite_group[meteorite_index]\
                         .add(Meteorite(1, True, meteorite.sprite.x, meteorite.sprite.y,
-                                       meteorite.sprite.starting_angle - 300, meteorite.sprite.speed))
+                                       meteorite.sprite.starting_angle - 300, meteorite.sprite.speed,
+                                       meteorite.sprite.color))
 
                 meteorite.sprite.kill()
                 del meteorite_group[meteorite_group.index(meteorite)]
