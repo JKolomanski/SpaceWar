@@ -82,6 +82,14 @@ class GuiObject(pygame.sprite.Sprite):
             self.image = pygame.transform.scale(pygame.image.load('Assets/GUI/score_frame.png'), (184, 44))
             self.rect = self.image.get_rect(topleft=(388, 0))
 
+        if type_of_object == 'game_over':
+            self.image = pygame.transform.scale(pygame.image.load('Assets/GUI/game_over.png'), (380, 300))
+            self.rect = self.image.get_rect(midtop=(resolution[0] / 2, resolution[1] / 24))
+
+        if type_of_object == 'score_frame2':
+            self.image = pygame.transform.scale(pygame.image.load('Assets/GUI/score_frame.png'), (184, 44))
+            self.rect = self.image.get_rect(midtop=(resolution[0] / 2, resolution[1] / 1.85))
+
     def animate(self):
         self.animation_index += 0.03
         if self.animation_index >= len(self.animation_frames):

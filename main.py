@@ -81,6 +81,12 @@ settings.add(GuiObject(type_of_object='menu_button', type_of_button='settings'))
 hint = pygame.sprite.Group()
 hint.add(GuiObject(type_of_object='hint'))
 
+game_over = pygame.sprite.Group()
+game_over.add(GuiObject(type_of_object='game_over'))
+
+score_frame_2 = pygame.sprite.Group()
+score_frame_2.add(GuiObject(type_of_object='score_frame2'))
+
 energy_frame = pygame.sprite.Group()
 energy_frame.add(GuiObject(type_of_object='energy_frame'))
 
@@ -132,6 +138,13 @@ while True:
                 if cursor_index == 0 and event.key == pygame.K_SPACE:
                     gamemode = 3
                     choose_sound.play()
+                deadzone = 5
+
+        # Game over screen
+        if gamemode == 5:
+            if event.type == pygame.KEYDOWN and not deadzone:
+                choose_sound.play()
+                gamemode = 1
                 deadzone = 5
 
     # Start menu
@@ -257,10 +270,23 @@ while True:
             invincibility_cooldown -= 1
 
         if life < 1:
-            player.sprite.kill()
+            gamemode = 5
 
         player.draw(screen)
         player.update()
+
+    elif gamemode == 5:
+        screen.blit(menu_background, (0, 0))
+
+        game_over.draw(screen)
+
+        press_any_key_button.draw(screen)
+        press_any_key_button.update(type_of_object='press_any_key')
+
+        score_frame_2.draw(screen)
+
+        score_surf = font.render(f'{score}', False, 'White')
+        screen.blit(score_surf, score_surf.get_rect(topleft=(resolution[0] / 2 + 8, resolution[1] / 1.85 + 12)))
 
     # Refresh screen
     pygame.display.update()
