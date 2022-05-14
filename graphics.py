@@ -76,7 +76,11 @@ class GuiObject(pygame.sprite.Sprite):
         if type_of_object == 'lives':
             self.animation_index = 3
             self.image = pygame.transform.scale(pygame.image.load('Assets/GUI/lives_3.png'), (124, 44))
-            self.rect = self.image.get_rect(topleft=(260, 0))
+            self.rect = self.image.get_rect(topleft=(264, 0))
+
+        if type_of_object == 'score_frame':
+            self.image = pygame.transform.scale(pygame.image.load('Assets/GUI/score_frame.png'), (184, 44))
+            self.rect = self.image.get_rect(topleft=(388, 0))
 
     def animate(self):
         self.animation_index += 0.03

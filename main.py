@@ -51,12 +51,16 @@ gamemode = 0
 # gamemode 3 = arcade mode
 # gamemode 4 = campaign mode
 # gamemode 5 = game over screen
-font = pygame.font.Font('Assets/Spacewarfont/spacewarfont.ttf', 25)
 deadzone = 5
 meteorite_index = 0
 score = 0
 life = 3
 invincibility_cooldown = 60
+
+# Text
+font = pygame.font.Font('Assets/Spacewarfont/spacewarfont.ttf', 20)
+score_surf = font.render(f'{score}', False, 'White')
+score_rect = score_surf.get_rect(topleft=(488, 12))
 
 # Groups
 logo = pygame.sprite.Group()
@@ -82,6 +86,9 @@ energy_frame.add(GuiObject(type_of_object='energy_frame'))
 
 lives = pygame.sprite.Group()
 lives.add(GuiObject(type_of_object='lives'))
+
+score_frame = pygame.sprite.Group()
+score_frame.add(GuiObject(type_of_object='score_frame'))
 
 cursor = pygame.sprite.Group()
 cursor.add(PlayerCursor())
@@ -176,6 +183,11 @@ while True:
         # Displaying lives
         lives.update(type_of_object='lives', index=life)
         lives.draw(screen)
+
+        # Displaying score
+        score_frame.draw(screen)
+        score_surf = font.render(f'{score}', False, 'White')
+        screen.blit(score_surf, score_rect)
 
         # Meteorites
         for meteorite in meteorite_group:
