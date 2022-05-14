@@ -59,7 +59,7 @@ invincibility_cooldown = 60
 
 # Text
 font = pygame.font.Font('Assets/Spacewarfont/spacewarfont.ttf', 20)
-score_surf = font.render(f'{score}', False, 'White')
+score_surf = font.render(str(score), False, 'White')
 score_rect = score_surf.get_rect(topleft=(488, 12))
 
 # Groups
@@ -177,7 +177,7 @@ while True:
             energy = 0
         energy_frame.draw(screen)
         energy_bar = pygame.Surface((energy, 20))
-        energy_bar.fill('White')
+        energy_bar.fill('#7FC9FF')
         screen.blit(energy_bar, (12, 12))
 
         # Displaying lives
