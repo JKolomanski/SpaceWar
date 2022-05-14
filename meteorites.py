@@ -41,6 +41,7 @@ class Meteorite(pygame.sprite.Sprite):
 
         # Large meteorites
         if self.size == 0:
+            self.cracked = False
             if self.color == 0:
                 self.image = pygame.transform.scale(pygame.transform.rotate(
                     pygame.image.load('Assets/Meteorites/meteorite_large_brown.png'), self.angle), (128, 128))
@@ -91,17 +92,40 @@ class Meteorite(pygame.sprite.Sprite):
         # Large meteorites
         if self.size == 0:
             if self.color == 0:
-                self.image = pygame.transform.rotate(pygame.transform.scale
-                                                     (pygame.image.load('Assets/Meteorites/meteorite_large_brown.png'),
-                                                      (128, 128)).convert_alpha(), self.angle)
+                if not self.cracked:
+                    self.image = pygame.transform.rotate(pygame.transform.scale
+                                                         (pygame.image.load('Assets/Meteorites/meteorite_large_brown'
+                                                                            '.png'),
+                                                          (128, 128)).convert_alpha(), self.angle)
+                if self.cracked:
+                    self.image = pygame.transform.rotate(pygame.transform.scale
+                                                         (pygame.image.load('Assets/Meteorites'
+                                                                            '/meteorite_large_brown_cracked.png'),
+                                                          (128, 128)).convert_alpha(), self.angle)
+
             if self.color == 1:
-                self.image = pygame.transform.rotate(pygame.transform.scale
-                                                     (pygame.image.load('Assets/Meteorites/meteorite_large_gray.png'),
-                                                      (128, 128)).convert_alpha(), self.angle)
+                if not self.cracked:
+                    self.image = pygame.transform.rotate(pygame.transform.scale
+                                                         (pygame.image.load('Assets/Meteorites/meteorite_large_gray'
+                                                                            '.png'),
+                                                          (128, 128)).convert_alpha(), self.angle)
+                if self.cracked:
+                    self.image = pygame.transform.rotate(pygame.transform.scale
+                                                         (pygame.image.load('Assets/Meteorites'
+                                                                            '/meteorite_large_gray_cracked.png'),
+                                                          (128, 128)).convert_alpha(), self.angle)
+
             if self.color == 2:
-                self.image = pygame.transform.rotate(pygame.transform.scale
-                                                     (pygame.image.load('Assets/Meteorites/meteorite_large_blue.png'),
-                                                      (128, 128)).convert_alpha(), self.angle)
+                if not self.cracked:
+                    self.image = pygame.transform.rotate(pygame.transform.scale
+                                                         (pygame.image.load('Assets/Meteorites/meteorite_large_blue'
+                                                                            '.png'),
+                                                          (128, 128)).convert_alpha(), self.angle)
+                if self.cracked:
+                    self.image = pygame.transform.rotate(pygame.transform.scale
+                                                         (pygame.image.load('Assets/Meteorites'
+                                                                            '/meteorite_large_blue_cracked.png'),
+                                                          (128, 128)).convert_alpha(), self.angle)
 
         # Small meteorites
         if self.size == 1:

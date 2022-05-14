@@ -166,40 +166,48 @@ while True:
             elif pygame.sprite.groupcollide(laser_player_group, meteorite, True, False):
 
                 # Small meteorites
-                if meteorite.sprite.size == 1 and len(meteorite_group) < 5:
-                    meteorite_index = len(meteorite_group)
-                    meteorite_group.append(str(meteorite_index))
-                    meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
-                    meteorite_group[meteorite_index].add(Meteorite(random.randint(0, 1)))
+                if meteorite.sprite.size == 1:
+                    if len(meteorite_group) < 5:
+                        meteorite_index = len(meteorite_group)
+                        meteorite_group.append(str(meteorite_index))
+                        meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
+                        meteorite_group[meteorite_index].add(Meteorite(random.randint(0, 1)))
+
+                    meteorite.sprite.kill()
+                    del meteorite_group[meteorite_group.index(meteorite)]
 
                 # Large meteorites
-                if meteorite.sprite.size == 0:
-                    meteorite_index = len(meteorite_group)
-                    meteorite_group.append(str(meteorite_index))
-                    meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
-                    meteorite_group[meteorite_index]\
-                        .add(Meteorite(1, True, meteorite.sprite.x, meteorite.sprite.y,
-                                       meteorite.sprite.starting_angle - 180, meteorite.sprite.speed,
-                                       meteorite.sprite.color))
+                elif meteorite.sprite.size == 0:
+                    if meteorite.sprite.cracked:
+                        meteorite_index = len(meteorite_group)
+                        meteorite_group.append(str(meteorite_index))
+                        meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
+                        meteorite_group[meteorite_index]\
+                            .add(Meteorite(1, True, meteorite.sprite.x, meteorite.sprite.y,
+                                           meteorite.sprite.starting_angle - 180, meteorite.sprite.speed,
+                                           meteorite.sprite.color))
 
-                    meteorite_index = len(meteorite_group)
-                    meteorite_group.append(str(meteorite_index))
-                    meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
-                    meteorite_group[meteorite_index]\
-                        .add(Meteorite(1, True, meteorite.sprite.x, meteorite.sprite.y,
-                                       meteorite.sprite.starting_angle - 60, meteorite.sprite.speed,
-                                       meteorite.sprite.color))
+                        meteorite_index = len(meteorite_group)
+                        meteorite_group.append(str(meteorite_index))
+                        meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
+                        meteorite_group[meteorite_index]\
+                            .add(Meteorite(1, True, meteorite.sprite.x, meteorite.sprite.y,
+                                           meteorite.sprite.starting_angle - 60, meteorite.sprite.speed,
+                                           meteorite.sprite.color))
 
-                    meteorite_index = len(meteorite_group)
-                    meteorite_group.append(str(meteorite_index))
-                    meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
-                    meteorite_group[meteorite_index]\
-                        .add(Meteorite(1, True, meteorite.sprite.x, meteorite.sprite.y,
-                                       meteorite.sprite.starting_angle - 300, meteorite.sprite.speed,
-                                       meteorite.sprite.color))
+                        meteorite_index = len(meteorite_group)
+                        meteorite_group.append(str(meteorite_index))
+                        meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
+                        meteorite_group[meteorite_index]\
+                            .add(Meteorite(1, True, meteorite.sprite.x, meteorite.sprite.y,
+                                           meteorite.sprite.starting_angle - 300, meteorite.sprite.speed,
+                                           meteorite.sprite.color))
 
-                meteorite.sprite.kill()
-                del meteorite_group[meteorite_group.index(meteorite)]
+                        meteorite.sprite.kill()
+                        del meteorite_group[meteorite_group.index(meteorite)]
+
+                    elif not meteorite.sprite.cracked:
+                        meteorite.sprite.cracked = True
 
         # Separate for loop to prevent meteorites from flickering
         for meteorite in meteorite_group:
