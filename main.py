@@ -33,7 +33,13 @@ cursor_sound = pygame.mixer.Sound('Assets/Sounds/cursor_sound.wav')
 cursor_sound.set_volume(0.1)
 
 player_hit_sound = pygame.mixer.Sound('Assets/Sounds/player_hit.wav')
-player_hit_sound.set_volume(0.5)
+player_hit_sound.set_volume(0.8)
+
+hit_sound = pygame.mixer.Sound('Assets/Sounds/hit.wav')
+hit_sound.set_volume(0.2)
+
+explosion_sound = pygame.mixer.Sound('Assets/Sounds/explosion.wav')
+explosion_sound.set_volume(0.3)
 
 # Variables
 clock = pygame.time.Clock()
@@ -184,6 +190,7 @@ while True:
 
                 # Small meteorites
                 if meteorite.sprite.size == 1:
+                    hit_sound.play()
                     score += 1
                     if len(meteorite_group) < 5:
                         meteorite_index = len(meteorite_group)
@@ -197,6 +204,7 @@ while True:
                 # Large meteorites
                 elif meteorite.sprite.size == 0:
                     if meteorite.sprite.cracked:
+                        explosion_sound.play()
                         meteorite_index = len(meteorite_group)
                         meteorite_group.append(str(meteorite_index))
                         meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
@@ -226,6 +234,7 @@ while True:
                         del meteorite_group[meteorite_group.index(meteorite)]
 
                     elif not meteorite.sprite.cracked:
+                        hit_sound.play()
                         meteorite.sprite.cracked = True
 
         # Separate for loop to prevent meteorites from flickering
