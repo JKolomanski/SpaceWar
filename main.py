@@ -45,6 +45,7 @@ gamemode = 0
 font = pygame.font.Font('Assets/Spacewarfont/spacewarfont.ttf', 25)
 deadzone = 5
 meteorite_index = 0
+score = 0
 
 # Groups
 logo = pygame.sprite.Group()
@@ -162,11 +163,13 @@ while True:
         for meteorite in meteorite_group:
             meteorite.update()
             if pygame.sprite.spritecollide(player.sprite, meteorite, False):
+                print(score)
                 player.sprite.kill()
             elif pygame.sprite.groupcollide(laser_player_group, meteorite, True, False):
 
                 # Small meteorites
                 if meteorite.sprite.size == 1:
+                    score += 1
                     if len(meteorite_group) < 5:
                         meteorite_index = len(meteorite_group)
                         meteorite_group.append(str(meteorite_index))
@@ -203,6 +206,7 @@ while True:
                                            meteorite.sprite.starting_angle - 300, meteorite.sprite.speed,
                                            meteorite.sprite.color))
 
+                        score += 3
                         meteorite.sprite.kill()
                         del meteorite_group[meteorite_group.index(meteorite)]
 
