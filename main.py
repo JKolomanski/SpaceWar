@@ -46,6 +46,8 @@ font = pygame.font.Font('Assets/Spacewarfont/spacewarfont.ttf', 25)
 deadzone = 5
 meteorite_index = 0
 score = 0
+life = 3
+invincibility_cooldown = 60
 
 # Groups
 logo = pygame.sprite.Group()
@@ -68,6 +70,9 @@ hint.add(GuiObject(type_of_object='hint'))
 
 energy_frame = pygame.sprite.Group()
 energy_frame.add(GuiObject(type_of_object='energy_frame'))
+
+lives = pygame.sprite.Group()
+lives.add(GuiObject(type_of_object='lives'))
 
 cursor = pygame.sprite.Group()
 cursor.add(PlayerCursor())
@@ -159,12 +164,18 @@ while True:
         energy_bar.fill('White')
         screen.blit(energy_bar, (12, 12))
 
+        # Displaying lives
+        lives.update(type_of_object='lives', index=life)
+        lives.draw(screen)
+
         # Meteorites
         for meteorite in meteorite_group:
             meteorite.update()
             if pygame.sprite.spritecollide(player.sprite, meteorite, False):
-                print(score)
-                player.sprite.kill()
+                if not invincibility_cooldown:
+                    life -= 1
+                    invincibility_cooldown = 60
+
             elif pygame.sprite.groupcollide(laser_player_group, meteorite, True, False):
 
                 # Small meteorites
@@ -216,6 +227,12 @@ while True:
         # Separate for loop to prevent meteorites from flickering
         for meteorite in meteorite_group:
             meteorite.draw(screen)
+
+        if invincibility_cooldown > 0:
+            invincibility_cooldown -= 1
+
+        if life < 1:
+            player.sprite.kill()
 
         player.draw(screen)
         player.update()

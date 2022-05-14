@@ -73,6 +73,11 @@ class GuiObject(pygame.sprite.Sprite):
             self.image = pygame.transform.scale(pygame.image.load('Assets/GUI/energy_frame.png'), (264, 44))
             self.rect = self.image.get_rect(topleft=(0, 0))
 
+        if type_of_object == 'lives':
+            self.animation_index = 3
+            self.image = pygame.transform.scale(pygame.image.load('Assets/GUI/lives_3.png'), (124, 44))
+            self.rect = self.image.get_rect(topleft=(260, 0))
+
     def animate(self):
         self.animation_index += 0.03
         if self.animation_index >= len(self.animation_frames):
@@ -87,6 +92,17 @@ class GuiObject(pygame.sprite.Sprite):
                 or type_of_button == 'settings' and index == 2:
             self.animation_index = 0
             self.image = self.animation_frames[self.animation_index]
+
         elif type_of_object == 'menu_button':
             self.animation_index = 1
             self.image = self.animation_frames[self.animation_index]
+
+        elif type_of_object == 'lives':
+            if index == 3:
+                self.image = pygame.transform.scale(pygame.image.load('Assets/GUI/lives_3.png'), (124, 44))
+
+            if index == 2:
+                self.image = pygame.transform.scale(pygame.image.load('Assets/GUI/lives_2.png'), (124, 44))
+
+            if index == 1:
+                self.image = pygame.transform.scale(pygame.image.load('Assets/GUI/lives_1.png'), (124, 44))
