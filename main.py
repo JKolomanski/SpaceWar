@@ -156,6 +156,7 @@ while True:
 
     # Main menu
     elif gamemode == 1:
+        score = 0
         screen.blit(menu_background, (0, 0))
         logo.draw(screen)
         hint.draw(screen)
@@ -276,6 +277,13 @@ while True:
         player.update()
 
     elif gamemode == 5:
+        life = 3
+        initial_meteorite = pygame.sprite.GroupSingle()
+        initial_meteorite.add(Meteorite(0))
+        meteorite_group = [initial_meteorite]
+        player.sprite.__init__()
+        laser_player_group.empty()
+
         screen.blit(menu_background, (0, 0))
 
         game_over.draw(screen)

@@ -148,7 +148,7 @@ class Player(pygame.sprite.Sprite):
             self.shooting = True
             self.shoot_sound.play()
             if self.energy > 5:
-                self.energy -= 5
+                self.energy -= 10
             else:
                 self.energy = 0
         else:
