@@ -177,10 +177,7 @@ while True:
 
         # Player shooting
         if player.sprite.shooting:
-            player_x = player.sprite.x
-            player_y = player.sprite.y
-            player_angle = player.sprite.player_angle
-            laser_player_group.add(LaserPlayer(x=player_x, y=player_y, angle=player_angle))
+            laser_player_group.add(LaserPlayer(x=player.sprite.x, y=player.sprite.y, angle=player.sprite.player_angle))
 
         laser_player_group.update()
         laser_player_group.draw(screen)
@@ -276,6 +273,7 @@ while True:
         player.draw(screen)
         player.update()
 
+    # Game over screen
     elif gamemode == 5:
         life = 3
         initial_meteorite = pygame.sprite.GroupSingle()

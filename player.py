@@ -30,6 +30,7 @@ class Player(pygame.sprite.Sprite):
 
         self.cooldown = 30
         self.shooting = False
+        self.is_shooting = False
 
         self.engine = False
 
@@ -143,14 +144,24 @@ class Player(pygame.sprite.Sprite):
         if self.cooldown:
             self.cooldown -= 1
 
-        if keys[pygame.K_SPACE] and not self.cooldown:
+        if keys[pygame.K_SPACE] and self.cooldown == 0 and self.is_shooting and self.energy > 0:
             self.cooldown = 30
             self.shooting = True
+            self.is_shooting = True
             self.shoot_sound.play()
             if self.energy > 5:
                 self.energy -= 10
             else:
                 self.energy = 0
+
+        elif not keys[pygame.K_SPACE]:
+            self.is_shooting = True
+            self.shooting = False
+
+        elif keys[pygame.K_SPACE] and self.energy == 0 or keys[pygame.K_SPACE] and not self.is_shooting:
+            self.shooting = False
+            self.is_shooting = False
+
         else:
             self.shooting = False
 
