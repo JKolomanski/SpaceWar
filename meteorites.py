@@ -14,17 +14,23 @@ class Meteorite(pygame.sprite.Sprite):
         self.rotation_speed = random.randint(-100, 100) / 100
 
         if not child:
-            self.angle = random.randint(-360, 360)
-            self.starting_angle = self.angle
-            self.speed = round(random.uniform(1, 3.5), 1)
-            self.color = random.randint(0, 2)
-
-            self.x = random.randint(-70, resolution[0] + 70)
-            if resolution[0] + 50 > self.x > -50:
-                self.y = random.choice([
-                    random.randint(-70, -50), random.randint(resolution[1] + 50, resolution[1] + 70)])
+            if angle:
+                self.angle = angle
+                self.x = x
+                self.y = y
+                self.speed = 1.5
             else:
-                self.y = random.randint(-70, resolution[1] + 70)
+                self.speed = round(random.uniform(1, 3.5), 1)
+                self.angle = random.randint(-360, 360)
+                self.x = random.randint(-70, resolution[0] + 70)
+                if resolution[0] + 50 > self.x > -50:
+                    self.y = random.choice([
+                        random.randint(-70, -50), random.randint(resolution[1] + 50, resolution[1] + 70)])
+                else:
+                    self.y = random.randint(-70, resolution[1] + 70)
+
+            self.starting_angle = self.angle
+            self.color = random.randint(0, 2)
 
         else:
             self.angle = angle

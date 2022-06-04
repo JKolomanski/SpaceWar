@@ -106,7 +106,7 @@ laser_player_group = pygame.sprite.Group()
 laser_player_group.add(LaserPlayer(-50, -50, 0))
 
 initial_meteorite = pygame.sprite.GroupSingle()
-initial_meteorite.add(Meteorite(0))
+initial_meteorite.add(Meteorite(0, x=resolution[0] / 2, y=resolution[1] + 30, angle=180))
 meteorite_group = [initial_meteorite]
 
 # Main loop
