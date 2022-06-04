@@ -6,6 +6,14 @@ from player import Player, PlayerCursor, LaserPlayer
 from graphics import GuiObject, get_resolution
 from meteorites import Meteorite
 
+
+def fadeout(transparency, object_list):
+    if transparency < 256:
+        for i in object_list:
+            i.update(type_of_object=str(i), do_fadeout=True, transparency=transparency)
+    return object_list
+
+
 pygame.init()
 
 # Screen, icon, display caption
@@ -51,7 +59,10 @@ gamemode = 0
 # gamemode 3 = arcade mode
 # gamemode 4 = campaign mode
 # gamemode 5 = game over screen
-deadzone = 5
+gamemode_transition = 1
+fading = 0
+game_played = False
+deadzone = 32
 meteorite_index = 0
 score = 0
 life = 3
@@ -84,8 +95,8 @@ hint.add(GuiObject(type_of_object='hint'))
 game_over = pygame.sprite.Group()
 game_over.add(GuiObject(type_of_object='game_over'))
 
-score_frame_2 = pygame.sprite.Group()
-score_frame_2.add(GuiObject(type_of_object='score_frame2'))
+score_frame2 = pygame.sprite.Group()
+score_frame2.add(GuiObject(type_of_object='score_frame2'))
 
 energy_frame = pygame.sprite.Group()
 energy_frame.add(GuiObject(type_of_object='energy_frame'))
@@ -109,6 +120,13 @@ initial_meteorite = pygame.sprite.GroupSingle()
 initial_meteorite.add(Meteorite(0, x=resolution[0] / 2, y=resolution[1] + 30, angle=180))
 meteorite_group = [initial_meteorite]
 
+
+GuiObject_list = [press_any_key_button, arcade, campaign, settings, hint]
+
+GuiObject_list2 = [logo, press_any_key_button, arcade, campaign, settings, hint, cursor]
+
+GuiObject_list3 = [press_any_key_button, arcade, campaign, settings, hint, cursor]
+
 # Main loop
 while True:
     if deadzone > 0:
@@ -123,7 +141,7 @@ while True:
         if gamemode == 0:
             if event.type == pygame.KEYDOWN and not deadzone:
                 choose_sound.play()
-                gamemode = 1
+                gamemode_transition = 255
                 deadzone = 5
 
         # Main menu
@@ -136,7 +154,7 @@ while True:
                     cursor_index += 1
                     cursor_sound.play()
                 if cursor_index == 0 and event.key == pygame.K_SPACE:
-                    gamemode = 3
+                    gamemode_transition = 255
                     choose_sound.play()
                 deadzone = 5
 
@@ -147,15 +165,55 @@ while True:
                 gamemode = 1
                 deadzone = 5
 
+    # Main loop
+
     # Start menu
     if gamemode == 0:
+
+        if gamemode_transition < 256 and fading == 0:
+            fading = 0
+            gamemode_transition += 10
+            GuiObject_list2 = fadeout(transparency=gamemode_transition, object_list=GuiObject_list2)
+
+        elif gamemode_transition >= 256:
+            fading = 1
+            gamemode_transition = 256
+
+        elif gamemode_transition < 256 and fading == 1:
+            GuiObject_list = fadeout(transparency=gamemode_transition, object_list=GuiObject_list)
+            gamemode_transition -= 40
+
+        if gamemode_transition <= 0:
+            fading = 0
+            gamemode = 1
+
         screen.blit(menu_background, (0, 0))
         logo.draw(screen)
         press_any_key_button.draw(screen)
-        press_any_key_button.update(type_of_object='press_any_key')
+        press_any_key_button.update('press_any_key')
 
     # Main menu
     elif gamemode == 1:
+        if gamemode_transition < 256 and fading == 0:
+            fading = 0
+            gamemode_transition += 40
+            if not game_played:
+                GuiObject_list3 = fadeout(transparency=gamemode_transition, object_list=GuiObject_list3)
+            else:
+                GuiObject_list2 = fadeout(transparency=gamemode_transition, object_list=GuiObject_list2)
+
+        elif gamemode_transition >= 256:
+            fading = 1
+            gamemode_transition = 256
+
+        elif gamemode_transition < 256 and fading == 1:
+            gamemode_transition -= 40
+            GuiObject_list2 = fadeout(transparency=gamemode_transition, object_list=GuiObject_list2)
+
+        if gamemode_transition <= 0:
+            fading = 0
+            gamemode = 3
+
         score = 0
         screen.blit(menu_background, (0, 0))
         logo.draw(screen)
@@ -173,6 +231,7 @@ while True:
 
     # Arcade mode
     elif gamemode == 3:
+
         screen.blit(menu_background, (0, 0))
 
         # Player shooting
@@ -275,6 +334,7 @@ while True:
 
     # Game over screen
     elif gamemode == 5:
+        game_played = True
         life = 3
         initial_meteorite = pygame.sprite.GroupSingle()
         initial_meteorite.add(Meteorite(0))
@@ -289,7 +349,7 @@ while True:
         press_any_key_button.draw(screen)
         press_any_key_button.update(type_of_object='press_any_key')
 
-        score_frame_2.draw(screen)
+        score_frame2.draw(screen)
 
         score_surf = font.render(f'{score}', False, 'White')
         screen.blit(score_surf, score_surf.get_rect(topleft=(resolution[0] / 2 + 8, resolution[1] / 1.85 + 12)))

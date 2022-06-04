@@ -1,4 +1,5 @@
 import random
+from PIL import Image
 
 import pygame
 import math
@@ -6,6 +7,16 @@ from graphics import get_resolution
 
 get_resolution()
 resolution = [get_resolution()[0], get_resolution()[1]]
+
+
+def pillow_to_pygame(pillow_image):
+    return pygame.image.fromstring(
+        pillow_image.tobytes(), pillow_image.size, pillow_image.mode).convert_alpha()
+
+
+def pygame_to_pillow(pygame_surface):
+    raw_str = pygame.image.tostring(pygame_surface, 'RGBA', False)
+    return Image.frombytes('RGBA', pygame_surface.get_size(), raw_str)
 
 
 class Player(pygame.sprite.Sprite):
@@ -214,11 +225,14 @@ class LaserPlayer(pygame.sprite.Sprite):
         self.calculating_position()
 
 
+# noinspection PyTypeChecker
 class PlayerCursor(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
 
         global resolution
+
+        self.transparency = 0
 
         self.x = resolution[0] / 2 - 160
         self.y = resolution[1] / 1.6
@@ -231,11 +245,13 @@ class PlayerCursor(pygame.sprite.Sprite):
             .convert_alpha()
         self.player_animation_index = 0
         self.animation_frames = [player_on1, player_on2, player_on3]
+        self.animation_frames2 = ('Assets/Player/player1_01.png', 'Assets/Player/player1_02.png',
+                                  'Assets/Player/player1_03.png')
 
         self.image = pygame.transform.rotate(self.animation_frames[self.player_animation_index], 0.3)
         self.rect = self.image.get_rect(center=(self.x, self.y))
 
-    def update(self, index):
+    def update(self, index=None, do_fadeout=None, transparency=None, type_of_object=None):
 
         self.player_animation_index += 0.3
         if self.player_animation_index >= len(self.animation_frames):
@@ -251,3 +267,14 @@ class PlayerCursor(pygame.sprite.Sprite):
 
         self.image = pygame.transform.rotate(self.animation_frames[int(self.player_animation_index)], 90)
         self.rect = self.image.get_rect(center=(self.x, self.y))
+
+        if do_fadeout:
+            self.transparency = transparency
+            logo = pygame_to_pillow(self.image)
+
+            pixels = list(logo.getdata())
+            pixels = [(pixel[0], pixel[1], pixel[2], self.transparency) for pixel in pixels]
+            logo.putdata(pixels)
+
+            self.image = pygame.transform.scale(pillow_to_pygame(logo),
+                                                (64, 64)).convert_alpha()
