@@ -48,7 +48,7 @@ class GuiObject(pygame.sprite.Sprite):
             self.size_y = 300
             self.image_file_0 = 'Assets/GUI/spacewar_logo.png'
             logo = pygame.transform.scale(pygame.image.load(self.image_file_0), (420, 300))\
-                .convert()
+                .convert_alpha()
             self.image = logo
             self.rect = self.image.get_rect(midtop=(resolution[0] / 2, resolution[1] / 24))
 
@@ -169,11 +169,11 @@ class GuiObject(pygame.sprite.Sprite):
 
         if do_fadeout:
             self.transparency = transparency
-            logo = pygame_to_pillow(self.image)
+            image = pygame_to_pillow(self.image)
 
-            pixels = list(logo.getdata())
+            pixels = list(image.getdata())
             pixels = [(pixel[0], pixel[1], pixel[2], self.transparency) for pixel in pixels]
-            logo.putdata(pixels)
+            image.putdata(pixels)
 
-            self.image = pygame.transform.scale(pillow_to_pygame(logo),
+            self.image = pygame.transform.scale(pillow_to_pygame(image),
                                                 (self.size_x, self.size_y)).convert_alpha()

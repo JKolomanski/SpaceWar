@@ -25,13 +25,16 @@ pygame.display.set_caption('SpaceWar!')
 pygame.display.set_icon(pygame.image.load('Assets/Player/player1_01.png'))
 
 # Randomise background
-background_index = random.randint(1, 3)
+background_index = random.randint(1, 4)
 if background_index == 1:
     menu_background = pygame.image.load('Assets/Backgrounds/background_earth.png').convert()
 elif background_index == 2:
     menu_background = pygame.image.load('Assets/Backgrounds/background_moon.png').convert()
-else:
+elif background_index == 3:
     menu_background = pygame.image.load('Assets/Backgrounds/background_mars.png').convert()
+else:
+    menu_background = pygame.image.load('Assets/Backgrounds/background_nebula.png').convert()
+
 
 # Sounds
 choose_sound = pygame.mixer.Sound('Assets/Sounds/menu_choose.wav')
@@ -107,7 +110,7 @@ lives.add(GuiObject(type_of_object='lives'))
 score_frame = pygame.sprite.Group()
 score_frame.add(GuiObject(type_of_object='score_frame'))
 
-cursor = pygame.sprite.Group()
+cursor = pygame.sprite.GroupSingle()
 cursor.add(PlayerCursor())
 
 player = pygame.sprite.GroupSingle()
@@ -155,6 +158,7 @@ while True:
                     cursor_sound.play()
                 if cursor_index == 0 and event.key == pygame.K_SPACE:
                     gamemode_transition = 255
+                    cursor.sprite.kill()
                     choose_sound.play()
                 deadzone = 5
 
