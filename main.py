@@ -130,6 +130,10 @@ GuiObject_list2 = [logo, press_any_key_button, arcade, campaign, settings, hint,
 
 GuiObject_list3 = [press_any_key_button, arcade, campaign, settings, hint, cursor]
 
+GuiObject_list4 = [player, lives, score_frame, energy_frame] + meteorite_group
+
+GuiObject_list5 = [game_over, press_any_key_button, score_frame2]
+
 # Main loop
 while True:
     if deadzone > 0:
@@ -158,7 +162,6 @@ while True:
                     cursor_sound.play()
                 if cursor_index == 0 and event.key == pygame.K_SPACE:
                     gamemode_transition = 255
-                    cursor.sprite.kill()
                     choose_sound.play()
                 deadzone = 5
 
@@ -166,7 +169,7 @@ while True:
         if gamemode == 5:
             if event.type == pygame.KEYDOWN and not deadzone:
                 choose_sound.play()
-                gamemode = 1
+                gamemode_transition = 255
                 deadzone = 5
 
     # Main loop
@@ -235,6 +238,23 @@ while True:
 
     # Arcade mode
     elif gamemode == 3:
+        if gamemode_transition < 256 and fading == 0:
+            fading = 0
+            gamemode_transition += 40
+            GuiObject_list4 = fadeout(transparency=gamemode_transition, object_list=GuiObject_list4)
+
+        elif gamemode_transition >= 256:
+            fading = 1
+            gamemode_transition = 256
+
+        elif gamemode_transition < 256 and fading == 1:
+            life -= 1
+            gamemode_transition -= 40
+            GuiObject_list4 = fadeout(transparency=gamemode_transition, object_list=GuiObject_list4)
+
+        if gamemode_transition <= 0:
+            fading = 0
+            gamemode = 5
 
         screen.blit(menu_background, (0, 0))
 
@@ -252,7 +272,8 @@ while True:
         energy_frame.draw(screen)
         energy_bar = pygame.Surface((energy, 20))
         energy_bar.fill('#7FC9FF')
-        screen.blit(energy_bar, (12, 12))
+        if life > 0:
+            screen.blit(energy_bar, (12, 12))
 
         # Displaying lives
         lives.update(type_of_object='lives', index=life)
@@ -261,7 +282,8 @@ while True:
         # Displaying score
         score_frame.draw(screen)
         score_surf = font.render(f'{score}', False, 'White')
-        screen.blit(score_surf, score_rect)
+        if life > 0:
+            screen.blit(score_surf, score_rect)
 
         # Meteorites
         for meteorite in meteorite_group:
@@ -330,19 +352,37 @@ while True:
         if invincibility_cooldown > 0:
             invincibility_cooldown -= 1
 
-        if life < 1:
-            gamemode = 5
+        if life == 0:
+            gamemode_transition = 255
 
         player.draw(screen)
         player.update()
 
     # Game over screen
     elif gamemode == 5:
+        if gamemode_transition < 256 and fading == 0:
+            fading = 0
+            gamemode_transition += 40
+            GuiObject_list5 = fadeout(transparency=gamemode_transition, object_list=GuiObject_list5)
+
+        elif gamemode_transition >= 256:
+            fading = 1
+            gamemode_transition = 256
+
+        elif gamemode_transition < 256 and fading == 1:
+            gamemode_transition -= 40
+            GuiObject_list5 = fadeout(transparency=gamemode_transition, object_list=GuiObject_list5)
+
+        if gamemode_transition <= 0:
+            fading = 0
+            gamemode = 1
+
         game_played = True
         life = 3
         initial_meteorite = pygame.sprite.GroupSingle()
         initial_meteorite.add(Meteorite(0))
         meteorite_group = [initial_meteorite]
+        cursor.sprite.__init__()
         player.sprite.__init__()
         laser_player_group.empty()
 
@@ -356,7 +396,8 @@ while True:
         score_frame2.draw(screen)
 
         score_surf = font.render(f'{score}', False, 'White')
-        screen.blit(score_surf, score_surf.get_rect(topleft=(resolution[0] / 2 + 8, resolution[1] / 1.85 + 12)))
+        if gamemode_transition == 256:
+            screen.blit(score_surf, score_surf.get_rect(topleft=(resolution[0] / 2 + 8, resolution[1] / 1.85 + 12)))
 
     # Refresh screen
     pygame.display.update()

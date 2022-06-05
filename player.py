@@ -19,10 +19,12 @@ def pygame_to_pillow(pygame_surface):
     return Image.frombytes('RGBA', pygame_surface.get_size(), raw_str)
 
 
+# noinspection PyUnresolvedReferences
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         global resolution
+        self.transparency = 0
 
         self.x = resolution[0] / 2
         self.y = resolution[1] / 2
@@ -181,17 +183,34 @@ class Player(pygame.sprite.Sprite):
         else:
             self.energy_regen = 0
 
-    def update(self):
+    def update(self, do_fadeout=None, transparency=None, type_of_object=None):
+
+        if do_fadeout:
+            self.transparency = transparency
+            image = pygame_to_pillow(self.image)
+
+            pixel = image.load()
+            for row in range(image.size[0]):
+                for column in range(image.size[1]):
+                    if pixel[row, column] != (0, 0, 0, 0):
+                        pixel[row, column] = (pixel[row, column][0], pixel[row, column][1],
+                                              pixel[row, column][2], self.transparency)
+
+            self.image = pygame.transform.scale(pillow_to_pygame(image),
+                                                (64, 64)).convert_alpha()
+
         self.shoot()
         self.going_forward()
         self.turning()
         self.calculating_position()
 
 
+# noinspection PyUnresolvedReferences
 class LaserPlayer(pygame.sprite.Sprite):
     def __init__(self, x, y, angle):
         super().__init__()
 
+        self.transparency = 0
         self.x = x
         self.y = y
         self.angle = angle + random.randint(-5, 5)
@@ -216,7 +235,7 @@ class LaserPlayer(pygame.sprite.Sprite):
         if self.x < -20 or self.x > resolution[0] + 20 or self.y < -20 or self.y > resolution[1] + 20:
             self.kill()
 
-    def update(self):
+    def update(self, do_fadeout=None, transparency=None):
         self.image = pygame.transform.rotate(pygame.transform.scale(pygame.image.load
                                                                     ('Assets/Player/laser_player_green.png'), (12, 28))
                                              .convert_alpha(), self.angle)
@@ -224,8 +243,22 @@ class LaserPlayer(pygame.sprite.Sprite):
 
         self.calculating_position()
 
+        if do_fadeout:
+            self.transparency = transparency
+            image = pygame_to_pillow(self.image)
 
-# noinspection PyTypeChecker
+            pixel = image.load()
+            for row in range(image.size[0]):
+                for column in range(image.size[1]):
+                    if pixel[row, column] != (0, 0, 0, 0):
+                        pixel[row, column] = (pixel[row, column][0], pixel[row, column][1],
+                                              pixel[row, column][2], self.transparency)
+
+            self.image = pygame.transform.scale(pillow_to_pygame(image),
+                                                (64, 64)).convert_alpha()
+
+
+# noinspection PyTypeChecker,PyUnresolvedReferences
 class PlayerCursor(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -270,11 +303,14 @@ class PlayerCursor(pygame.sprite.Sprite):
 
         if do_fadeout:
             self.transparency = transparency
-            logo = pygame_to_pillow(self.image)
+            image = pygame_to_pillow(self.image)
 
-            pixels = list(logo.getdata())
-            pixels = [(pixel[0], pixel[1], pixel[2], self.transparency) for pixel in pixels]
-            logo.putdata(pixels)
+            pixel = image.load()
+            for row in range(image.size[0]):
+                for column in range(image.size[1]):
+                    if pixel[row, column] != (0, 0, 0, 0):
+                        pixel[row, column] = (pixel[row, column][0], pixel[row, column][1],
+                                              pixel[row, column][2], self.transparency)
 
-            self.image = pygame.transform.scale(pillow_to_pygame(logo),
+            self.image = pygame.transform.scale(pillow_to_pygame(image),
                                                 (64, 64)).convert_alpha()

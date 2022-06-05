@@ -1,16 +1,29 @@
 import pygame
 import random
 import math
+from PIL import Image
 from graphics import get_resolution
 
 get_resolution()
 resolution = [get_resolution()[0], get_resolution()[1]]
 
 
+def pillow_to_pygame(pillow_image):
+    return pygame.image.fromstring(
+        pillow_image.tobytes(), pillow_image.size, pillow_image.mode).convert_alpha()
+
+
+def pygame_to_pillow(pygame_surface):
+    raw_str = pygame.image.tostring(pygame_surface, 'RGBA', False)
+    return Image.frombytes('RGBA', pygame_surface.get_size(), raw_str)
+
+
+# noinspection PyUnresolvedReferences
 class Meteorite(pygame.sprite.Sprite):
     def __init__(self, size, child=None, x=None, y=None, angle=None, speed=None, color=None):
         super().__init__()
 
+        self.transparency = 0
         self.rotation_speed = random.randint(-100, 100) / 100
 
         if not child:
@@ -95,7 +108,7 @@ class Meteorite(pygame.sprite.Sprite):
             else:
                 self.y = random.randint(-70, resolution[1] + 70)
 
-    def update(self):
+    def update(self, do_fadeout=None, transparency=None, type_of_object=None):
         self.angle += self.rotation_speed
 
         # Large meteorites
@@ -154,3 +167,17 @@ class Meteorite(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(self.x, self.y))
 
         self.calculate_position()
+
+        if do_fadeout:
+            self.transparency = transparency
+            image = pygame_to_pillow(self.image)
+
+            pixel = image.load()
+            for row in range(image.size[0]):
+                for column in range(image.size[1]):
+                    if pixel[row, column] != (0, 0, 0, 0):
+                        pixel[row, column] = (pixel[row, column][0], pixel[row, column][1],
+                                              pixel[row, column][2], self.transparency)
+
+            self.image = pygame.transform.scale(pillow_to_pygame(image),
+                                                (64, 64)).convert_alpha()

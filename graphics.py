@@ -171,9 +171,12 @@ class GuiObject(pygame.sprite.Sprite):
             self.transparency = transparency
             image = pygame_to_pillow(self.image)
 
-            pixels = list(image.getdata())
-            pixels = [(pixel[0], pixel[1], pixel[2], self.transparency) for pixel in pixels]
-            image.putdata(pixels)
+            pixel = image.load()
+            for row in range(image.size[0]):
+                for column in range(image.size[1]):
+                    if pixel[row, column] != (0, 0, 0, 0):
+                        pixel[row, column] = (pixel[row, column][0], pixel[row, column][1],
+                                              pixel[row, column][2], self.transparency)
 
             self.image = pygame.transform.scale(pillow_to_pygame(image),
                                                 (self.size_x, self.size_y)).convert_alpha()
