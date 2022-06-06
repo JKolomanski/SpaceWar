@@ -46,6 +46,9 @@ cursor_sound.set_volume(0.1)
 player_hit_sound = pygame.mixer.Sound('Assets/Sounds/player_hit.wav')
 player_hit_sound.set_volume(0.8)
 
+player_explosion_sound = pygame.mixer.Sound('Assets/Sounds/player_explosion.wav')
+player_explosion_sound.set_volume(0.5)
+
 hit_sound = pygame.mixer.Sound('Assets/Sounds/hit.wav')
 hit_sound.set_volume(0.2)
 
@@ -291,7 +294,10 @@ while True:
             if pygame.sprite.spritecollide(player.sprite, meteorite, False):
                 if not invincibility_cooldown:
                     life -= 1
-                    player_hit_sound.play()
+                    if life > 0:
+                        player_hit_sound.play()
+                    else:
+                        player_explosion_sound.play()
                     invincibility_cooldown = 60
 
             elif pygame.sprite.groupcollide(laser_player_group, meteorite, True, False):
