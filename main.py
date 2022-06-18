@@ -7,11 +7,42 @@ from graphics import GuiObject, get_resolution
 from meteorites import Meteorite
 
 
-def fadeout(transparency, object_list):
+def do_fade(transparency, object_list):
     if transparency < 256:
         for i in object_list:
             i.update(type_of_object=str(i), do_fadeout=True, transparency=transparency)
     return object_list
+
+
+def fade(object_list, object_list2):
+    global fading
+    global gamemode
+    global gamemode_transition
+    change_gamemode = False
+
+    def do_fade(list_of_objects):
+        if gamemode_transition < 256:
+            for i in list_of_objects:
+                i.update(type_of_object=str(i), do_fadeout=True, transparency=gamemode_transition)
+        return list_of_objects
+
+    if gamemode_transition < 256 and fading == 0:
+        fading = 0
+        gamemode_transition += 40
+        object_list = do_fade(list_of_objects=object_list)
+
+    elif gamemode_transition >= 256:
+        fading = 1
+        gamemode_transition = 256
+
+    elif gamemode_transition < 256 and fading == 1:
+        gamemode_transition -= 40
+        object_list2 = do_fade(list_of_objects=object_list2)
+
+    if gamemode_transition <= 0:
+        fading = 0
+        change_gamemode = True
+    return [object_list, object_list2, change_gamemode]
 
 
 pygame.init()
@@ -58,7 +89,7 @@ explosion_sound.set_volume(0.3)
 # Variables
 clock = pygame.time.Clock()
 cursor_index = 0
-gamemode = 0
+gamemode = 5
 # gamemode 0 = start menu
 # gamemode 1 = main menu
 # gamemode 2 = settings
@@ -71,7 +102,7 @@ game_played = False
 deadzone = 32
 meteorite_index = 0
 score = 0
-life = 3
+lives = 3
 invincibility_cooldown = 60
 
 # Text
@@ -107,8 +138,8 @@ score_frame2.add(GuiObject(type_of_object='score_frame2'))
 energy_frame = pygame.sprite.Group()
 energy_frame.add(GuiObject(type_of_object='energy_frame'))
 
-lives = pygame.sprite.Group()
-lives.add(GuiObject(type_of_object='lives'))
+lives_bar = pygame.sprite.Group()
+lives_bar.add(GuiObject(type_of_object='lives'))
 
 score_frame = pygame.sprite.Group()
 score_frame.add(GuiObject(type_of_object='score_frame'))
@@ -133,7 +164,7 @@ GuiObject_list2 = [logo, press_any_key_button, arcade, campaign, settings, hint,
 
 GuiObject_list3 = [press_any_key_button, arcade, campaign, settings, hint, cursor]
 
-GuiObject_list4 = [player, lives, score_frame, energy_frame] + meteorite_group
+GuiObject_list4 = [player, lives_bar, score_frame, energy_frame] + meteorite_group
 
 GuiObject_list5 = [game_over, press_any_key_button, score_frame2]
 
@@ -183,14 +214,14 @@ while True:
         if gamemode_transition < 256 and fading == 0:
             fading = 0
             gamemode_transition += 10
-            GuiObject_list2 = fadeout(transparency=gamemode_transition, object_list=GuiObject_list2)
+            GuiObject_list2 = do_fade(transparency=gamemode_transition, object_list=GuiObject_list2)
 
         elif gamemode_transition >= 256:
             fading = 1
             gamemode_transition = 256
 
         elif gamemode_transition < 256 and fading == 1:
-            GuiObject_list = fadeout(transparency=gamemode_transition, object_list=GuiObject_list)
+            GuiObject_list = do_fade(transparency=gamemode_transition, object_list=GuiObject_list)
             gamemode_transition -= 40
 
         if gamemode_transition <= 0:
@@ -208,9 +239,9 @@ while True:
             fading = 0
             gamemode_transition += 40
             if not game_played:
-                GuiObject_list3 = fadeout(transparency=gamemode_transition, object_list=GuiObject_list3)
+                GuiObject_list3 = do_fade(transparency=gamemode_transition, object_list=GuiObject_list3)
             else:
-                GuiObject_list2 = fadeout(transparency=gamemode_transition, object_list=GuiObject_list2)
+                GuiObject_list2 = do_fade(transparency=gamemode_transition, object_list=GuiObject_list2)
 
         elif gamemode_transition >= 256:
             fading = 1
@@ -218,7 +249,7 @@ while True:
 
         elif gamemode_transition < 256 and fading == 1:
             gamemode_transition -= 40
-            GuiObject_list2 = fadeout(transparency=gamemode_transition, object_list=GuiObject_list2)
+            GuiObject_list2 = do_fade(transparency=gamemode_transition, object_list=GuiObject_list2)
 
         if gamemode_transition <= 0:
             fading = 0
@@ -241,22 +272,8 @@ while True:
 
     # Arcade mode
     elif gamemode == 3:
-        if gamemode_transition < 256 and fading == 0:
-            fading = 0
-            gamemode_transition += 40
-            GuiObject_list4 = fadeout(transparency=gamemode_transition, object_list=GuiObject_list4)
-
-        elif gamemode_transition >= 256:
-            fading = 1
-            gamemode_transition = 256
-
-        elif gamemode_transition < 256 and fading == 1:
-            life -= 1
-            gamemode_transition -= 40
-            GuiObject_list4 = fadeout(transparency=gamemode_transition, object_list=GuiObject_list4)
-
-        if gamemode_transition <= 0:
-            fading = 0
+        GuiObject_list4 = fade(object_list=GuiObject_list4, object_list2=GuiObject_list4)[1]
+        if fade(object_list=GuiObject_list4, object_list2=GuiObject_list4)[2]:
             gamemode = 5
 
         screen.blit(menu_background, (0, 0))
@@ -275,17 +292,17 @@ while True:
         energy_frame.draw(screen)
         energy_bar = pygame.Surface((energy, 20))
         energy_bar.fill('#7FC9FF')
-        if life > 0:
+        if lives > 0:
             screen.blit(energy_bar, (12, 12))
 
         # Displaying lives
-        lives.update(type_of_object='lives', index=life)
-        lives.draw(screen)
+        lives_bar.update(type_of_object='lives', index=lives)
+        lives_bar.draw(screen)
 
         # Displaying score
         score_frame.draw(screen)
         score_surf = font.render(f'{score}', False, 'White')
-        if life > 0:
+        if lives > 0:
             screen.blit(score_surf, score_rect)
 
         # Meteorites
@@ -293,8 +310,8 @@ while True:
             meteorite.update()
             if pygame.sprite.spritecollide(player.sprite, meteorite, False):
                 if not invincibility_cooldown:
-                    life -= 1
-                    if life > 0:
+                    lives -= 1
+                    if lives > 0:
                         player_hit_sound.play()
                     else:
                         player_explosion_sound.play()
@@ -358,7 +375,7 @@ while True:
         if invincibility_cooldown > 0:
             invincibility_cooldown -= 1
 
-        if life == 0:
+        if lives == 0:
             gamemode_transition = 255
 
         player.draw(screen)
@@ -366,25 +383,12 @@ while True:
 
     # Game over screen
     elif gamemode == 5:
-        if gamemode_transition < 256 and fading == 0:
-            fading = 0
-            gamemode_transition += 40
-            GuiObject_list5 = fadeout(transparency=gamemode_transition, object_list=GuiObject_list5)
-
-        elif gamemode_transition >= 256:
-            fading = 1
-            gamemode_transition = 256
-
-        elif gamemode_transition < 256 and fading == 1:
-            gamemode_transition -= 40
-            GuiObject_list5 = fadeout(transparency=gamemode_transition, object_list=GuiObject_list5)
-
-        if gamemode_transition <= 0:
-            fading = 0
-            gamemode = 1
+        GuiObject_list5 = fade(object_list=GuiObject_list5, object_list2=GuiObject_list5)[1]
+        if fade(object_list=GuiObject_list5, object_list2=GuiObject_list5)[2]:
+            gamemode = 2
 
         game_played = True
-        life = 3
+        lives = 3
         initial_meteorite = pygame.sprite.GroupSingle()
         initial_meteorite.add(Meteorite(0))
         meteorite_group = [initial_meteorite]
