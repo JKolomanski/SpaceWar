@@ -7,18 +7,15 @@ from graphics import GuiObject, get_resolution
 from meteorites import Meteorite
 
 
-def do_fade(transparency, object_list):
-    if transparency < 256:
-        for i in object_list:
-            i.update(type_of_object=str(i), do_fadeout=True, transparency=transparency)
-    return object_list
-
-
-def fade(object_list, object_list2):
+def fade(object_list, object_list2, switch_to, start_menu=None):
+    global lives
     global fading
     global gamemode
     global gamemode_transition
-    change_gamemode = False
+    if start_menu:
+        speed_of_transition = 10
+    else:
+        speed_of_transition = 40
 
     def do_fade(list_of_objects):
         if gamemode_transition < 256:
@@ -28,7 +25,7 @@ def fade(object_list, object_list2):
 
     if gamemode_transition < 256 and fading == 0:
         fading = 0
-        gamemode_transition += 40
+        gamemode_transition += speed_of_transition
         object_list = do_fade(list_of_objects=object_list)
 
     elif gamemode_transition >= 256:
@@ -36,13 +33,15 @@ def fade(object_list, object_list2):
         gamemode_transition = 256
 
     elif gamemode_transition < 256 and fading == 1:
+        if switch_to == 5:
+            lives -= 1
         gamemode_transition -= 40
         object_list2 = do_fade(list_of_objects=object_list2)
 
     if gamemode_transition <= 0:
         fading = 0
-        change_gamemode = True
-    return [object_list, object_list2, change_gamemode]
+        gamemode = switch_to
+    return [object_list, object_list2]
 
 
 pygame.init()
@@ -89,7 +88,7 @@ explosion_sound.set_volume(0.3)
 # Variables
 clock = pygame.time.Clock()
 cursor_index = 0
-gamemode = 5
+gamemode = 0
 # gamemode 0 = start menu
 # gamemode 1 = main menu
 # gamemode 2 = settings
@@ -98,6 +97,8 @@ gamemode = 5
 # gamemode 5 = game over screen
 gamemode_transition = 1
 fading = 0
+# 0 = Fading in
+# 1 = Fading out
 game_played = False
 deadzone = 32
 meteorite_index = 0
@@ -210,23 +211,9 @@ while True:
 
     # Start menu
     if gamemode == 0:
-
-        if gamemode_transition < 256 and fading == 0:
-            fading = 0
-            gamemode_transition += 10
-            GuiObject_list2 = do_fade(transparency=gamemode_transition, object_list=GuiObject_list2)
-
-        elif gamemode_transition >= 256:
-            fading = 1
-            gamemode_transition = 256
-
-        elif gamemode_transition < 256 and fading == 1:
-            GuiObject_list = do_fade(transparency=gamemode_transition, object_list=GuiObject_list)
-            gamemode_transition -= 40
-
-        if gamemode_transition <= 0:
-            fading = 0
-            gamemode = 1
+        Object_list_temp = fade(object_list=GuiObject_list2, object_list2=GuiObject_list, switch_to=1, start_menu=True)
+        GuiObject_list = Object_list_temp[1]
+        GuiObject_list2 = Object_list_temp[0]
 
         screen.blit(menu_background, (0, 0))
         logo.draw(screen)
@@ -235,25 +222,14 @@ while True:
 
     # Main menu
     elif gamemode == 1:
-        if gamemode_transition < 256 and fading == 0:
-            fading = 0
-            gamemode_transition += 40
-            if not game_played:
-                GuiObject_list3 = do_fade(transparency=gamemode_transition, object_list=GuiObject_list3)
-            else:
-                GuiObject_list2 = do_fade(transparency=gamemode_transition, object_list=GuiObject_list2)
-
-        elif gamemode_transition >= 256:
-            fading = 1
-            gamemode_transition = 256
-
-        elif gamemode_transition < 256 and fading == 1:
-            gamemode_transition -= 40
-            GuiObject_list2 = do_fade(transparency=gamemode_transition, object_list=GuiObject_list2)
-
-        if gamemode_transition <= 0:
-            fading = 0
-            gamemode = 3
+        if not game_played:
+            Object_list_temp = fade(object_list=GuiObject_list3, object_list2=GuiObject_list2, switch_to=3)
+            GuiObject_list3 = Object_list_temp[0]
+            GuiObject_list2 = Object_list_temp[1]
+        else:
+            Object_list_temp = fade(object_list=GuiObject_list2, object_list2=GuiObject_list, switch_to=3)
+            GuiObject_list = Object_list_temp[1]
+            GuiObject_list2 = Object_list_temp[0]
 
         score = 0
         screen.blit(menu_background, (0, 0))
@@ -272,9 +248,7 @@ while True:
 
     # Arcade mode
     elif gamemode == 3:
-        GuiObject_list4 = fade(object_list=GuiObject_list4, object_list2=GuiObject_list4)[1]
-        if fade(object_list=GuiObject_list4, object_list2=GuiObject_list4)[2]:
-            gamemode = 5
+        GuiObject_list4 = fade(object_list=GuiObject_list4, object_list2=GuiObject_list4, switch_to=5)[1]
 
         screen.blit(menu_background, (0, 0))
 
@@ -383,9 +357,7 @@ while True:
 
     # Game over screen
     elif gamemode == 5:
-        GuiObject_list5 = fade(object_list=GuiObject_list5, object_list2=GuiObject_list5)[1]
-        if fade(object_list=GuiObject_list5, object_list2=GuiObject_list5)[2]:
-            gamemode = 2
+        GuiObject_list5 = fade(object_list=GuiObject_list5, object_list2=GuiObject_list5, switch_to=1)[1]
 
         game_played = True
         lives = 3
