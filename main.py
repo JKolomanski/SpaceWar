@@ -74,7 +74,7 @@ cursor_sound = pygame.mixer.Sound('Assets/Sounds/cursor_sound.wav')
 cursor_sound.set_volume(0.1)
 
 player_hit_sound = pygame.mixer.Sound('Assets/Sounds/player_hit.wav')
-player_hit_sound.set_volume(0.8)
+player_hit_sound.set_volume(0.5)
 
 player_explosion_sound = pygame.mixer.Sound('Assets/Sounds/player_explosion.wav')
 player_explosion_sound.set_volume(0.5)
@@ -83,7 +83,7 @@ hit_sound = pygame.mixer.Sound('Assets/Sounds/hit.wav')
 hit_sound.set_volume(0.2)
 
 explosion_sound = pygame.mixer.Sound('Assets/Sounds/explosion.wav')
-explosion_sound.set_volume(0.3)
+explosion_sound.set_volume(0.2)
 
 # Variables
 clock = pygame.time.Clock()

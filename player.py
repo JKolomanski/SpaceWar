@@ -61,7 +61,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(self.x, self.y))
 
         self.shoot_sound = pygame.mixer.Sound('Assets/Sounds/shoot.wav')
-        self.shoot_sound.set_volume(0.3)
+        self.shoot_sound.set_volume(0.2)
 
     def going_forward(self):
         keys = pygame.key.get_pressed()
