@@ -89,8 +89,8 @@ class Meteorite(pygame.sprite.Sprite):
 
         # If the meteorite is a child
         else:
-            self.angle = angle
-            self.starting_angle = angle
+            self.angle = angle + random.randint(-30, 30)
+            self.starting_angle = self.angle
             self.x = x
             self.y = y
             self.speed = speed
