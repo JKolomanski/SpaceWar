@@ -227,7 +227,7 @@ while True:
             GuiObject_list3 = Object_list_temp[0]
             GuiObject_list2 = Object_list_temp[1]
         else:
-            Object_list_temp = fade(object_list=GuiObject_list2, object_list2=GuiObject_list, switch_to=3)
+            Object_list_temp = fade(object_list=GuiObject_list2, object_list2=GuiObject_list2, switch_to=3)
             GuiObject_list = Object_list_temp[1]
             GuiObject_list2 = Object_list_temp[0]
 
@@ -292,7 +292,6 @@ while True:
                     invincibility_cooldown = 60
 
             elif pygame.sprite.groupcollide(laser_player_group, meteorite, True, False):
-
                 # Small meteorites
                 if meteorite.sprite.size == 1:
                     hit_sound.play()
