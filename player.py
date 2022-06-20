@@ -23,8 +23,8 @@ def pygame_to_pillow(pygame_surface):
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
+
         global resolution
-        self.transparency = 0
 
         self.x = resolution[0] / 2
         self.y = resolution[1] / 2
@@ -184,21 +184,6 @@ class Player(pygame.sprite.Sprite):
             self.energy_regen = 0
 
     def update(self, do_fadeout=None, transparency=None, type_of_object=None):
-
-        if do_fadeout:
-            self.transparency = transparency
-            image = pygame_to_pillow(self.image)
-
-            pixel = image.load()
-            for row in range(image.size[0]):
-                for column in range(image.size[1]):
-                    if pixel[row, column] != (0, 0, 0, 0):
-                        pixel[row, column] = (pixel[row, column][0], pixel[row, column][1],
-                                              pixel[row, column][2], self.transparency)
-
-            self.image = pygame.transform.scale(pillow_to_pygame(image),
-                                                (64, 64)).convert_alpha()
-
         self.shoot()
         self.going_forward()
         self.turning()

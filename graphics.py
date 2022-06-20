@@ -29,6 +29,7 @@ def pygame_to_pillow(pygame_surface):
 class GuiObject(pygame.sprite.Sprite):
     def __init__(self, type_of_object, type_of_button=None):
         super().__init__()
+
         self.transparency = 0
 
         if type_of_object == 'press_any_key':
@@ -108,7 +109,7 @@ class GuiObject(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(topleft=(0, 0))
 
         if type_of_object == 'lives':
-            self.transparency = 255
+
             self.size_x = 124
             self.size_y = 44
             self.image_file_0 = 'Assets/GUI/lives_3.png'
@@ -117,7 +118,6 @@ class GuiObject(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(topleft=(264, 0))
 
         if type_of_object == 'score_frame':
-            self.transparency = 255
             self.size_x = 184
             self.size_y = 44
             self.image_file_0 = 'Assets/GUI/score_frame.png'

@@ -19,13 +19,50 @@ def pygame_to_pillow(pygame_surface):
 
 
 # noinspection PyUnresolvedReferences
+def define_image(color, size):
+    # brown
+    if color == 0:
+        r_offset = 3
+        g_offset = -1
+        b_offset = -1
+    # gray
+    elif color == 1:
+        r_offset = 0
+        g_offset = 0
+        b_offset = 0
+    # blue
+    else:
+        r_offset = -4
+        g_offset = -4
+        b_offset = 4
+
+    if size == 0:
+        image_file = 'Assets/Meteorites/meteorite_large.png'
+    else:
+        image_file = 'Assets/Meteorites/meteorite_small.png'
+
+    image = pygame.image.load(image_file).convert_alpha()
+    image = pygame_to_pillow(image)
+    image.convert('RGBA')
+
+    pixel = image.load()
+    for row in range(image.size[0]):
+        for column in range(image.size[1]):
+            if pixel[row, column] != (0, 0, 0, 0):
+                pixel[row, column] = (pixel[row, column][0] + r_offset, pixel[row, column][1] + g_offset,
+                                      pixel[row, column][2] + b_offset, 256)
+    return pillow_to_pygame(image)
+
+
+# noinspection PyUnresolvedReferences
 class Meteorite(pygame.sprite.Sprite):
     def __init__(self, size, child=None, x=None, y=None, angle=None, speed=None, color=None):
         super().__init__()
 
-        self.transparency = 0
         self.rotation_speed = random.randint(-100, 100) / 100
+        self.cracked = False
 
+        # If the meteorite is not a child
         if not child:
             # Initial meteorite
             if angle:
@@ -46,6 +83,9 @@ class Meteorite(pygame.sprite.Sprite):
 
             self.starting_angle = self.angle
             self.color = random.randint(0, 2)
+            # color 0 = brown
+            # color 1 = gray
+            # color 2 = blue
 
         # If the meteorite is a child
         else:
@@ -63,29 +103,29 @@ class Meteorite(pygame.sprite.Sprite):
 
         # Large meteorites
         if self.size == 0:
-            self.cracked = False
+            # brown
             if self.color == 0:
-                self.image = pygame.transform.scale(pygame.transform.rotate(
-                    pygame.image.load('Assets/Meteorites/meteorite_large_brown.png'), self.angle), (128, 128))
+                self.original_image = define_image(0, 0)
+            # gray
             if self.color == 1:
-                self.image = pygame.transform.scale(pygame.transform.rotate(
-                    pygame.image.load('Assets/Meteorites/meteorite_large_gray.png'), self.angle), (128, 128))
+                self.original_image = define_image(1, 0)
+            # blue
             if self.color == 2:
-                self.image = pygame.transform.scale(pygame.transform.rotate(
-                    pygame.image.load('Assets/Meteorites/meteorite_large_blue.png'), self.angle), (128, 128))
+                self.original_image = define_image(2, 0)
 
         # Small meteorites
         if self.size == 1:
+            # brown
             if self.color == 0:
-                self.image = pygame.transform.scale(pygame.transform.rotate(
-                    pygame.image.load('Assets/Meteorites/meteorite_small_brown.png'), self.angle), (64, 64))
+                self.original_image = define_image(0, 1)
+            # gray
             if self.color == 1:
-                self.image = pygame.transform.scale(pygame.transform.rotate(
-                    pygame.image.load('Assets/Meteorites/meteorite_small_gray.png'), self.angle), (64, 64))
+                self.original_image = define_image(1, 1)
+            # blue
             if self.color == 2:
-                self.image = pygame.transform.scale(pygame.transform.rotate(
-                    pygame.image.load('Assets/Meteorites/meteorite_small_blue.png'), self.angle), (64, 64))
+                self.original_image = define_image(2, 1)
 
+        self.image = self.original_image
         self.rect = self.image.get_rect(center=(self.x, self.y))
 
     def calculate_position(self):
@@ -108,76 +148,19 @@ class Meteorite(pygame.sprite.Sprite):
             else:
                 self.y = random.randint(-70, resolution[1] + 70)
 
-    def update(self, do_fadeout=None, transparency=None, type_of_object=None):
-        self.angle += self.rotation_speed
-
+    def update_image(self):
         # Large meteorites
         if self.size == 0:
-            if self.color == 0:
-                if not self.cracked:
-                    self.image = pygame.transform.rotate(pygame.transform.scale
-                                                         (pygame.image.load('Assets/Meteorites/meteorite_large_brown'
-                                                                            '.png'),
-                                                          (128, 128)).convert_alpha(), self.angle)
-                if self.cracked:
-                    self.image = pygame.transform.rotate(pygame.transform.scale
-                                                         (pygame.image.load('Assets/Meteorites'
-                                                                            '/meteorite_large_brown_cracked.png'),
-                                                          (128, 128)).convert_alpha(), self.angle)
-
-            if self.color == 1:
-                if not self.cracked:
-                    self.image = pygame.transform.rotate(pygame.transform.scale
-                                                         (pygame.image.load('Assets/Meteorites/meteorite_large_gray'
-                                                                            '.png'),
-                                                          (128, 128)).convert_alpha(), self.angle)
-                if self.cracked:
-                    self.image = pygame.transform.rotate(pygame.transform.scale
-                                                         (pygame.image.load('Assets/Meteorites'
-                                                                            '/meteorite_large_gray_cracked.png'),
-                                                          (128, 128)).convert_alpha(), self.angle)
-
-            if self.color == 2:
-                if not self.cracked:
-                    self.image = pygame.transform.rotate(pygame.transform.scale
-                                                         (pygame.image.load('Assets/Meteorites/meteorite_large_blue'
-                                                                            '.png'),
-                                                          (128, 128)).convert_alpha(), self.angle)
-                if self.cracked:
-                    self.image = pygame.transform.rotate(pygame.transform.scale
-                                                         (pygame.image.load('Assets/Meteorites'
-                                                                            '/meteorite_large_blue_cracked.png'),
-                                                          (128, 128)).convert_alpha(), self.angle)
+            self.image = pygame.transform.rotate(pygame.transform.scale(self.original_image, (128, 128)), self.angle) \
+                .convert_alpha()
 
         # Small meteorites
-        if self.size == 1:
-            if self.color == 0:
-                self.image = pygame.transform.rotate(pygame.transform.scale
-                                                     (pygame.image.load('Assets/Meteorites/meteorite_small_brown.png'),
-                                                      (64, 64)).convert_alpha(), self.angle)
-            if self.color == 1:
-                self.image = pygame.transform.rotate(pygame.transform.scale
-                                                     (pygame.image.load('Assets/Meteorites/meteorite_small_gray.png'),
-                                                      (64, 64)).convert_alpha(), self.angle)
-            if self.color == 2:
-                self.image = pygame.transform.rotate(pygame.transform.scale
-                                                     (pygame.image.load('Assets/Meteorites/meteorite_small_blue.png'),
-                                                      (64, 64)).convert_alpha(), self.angle)
+        elif self.size == 1:
+            self.image = pygame.transform.rotate(pygame.transform.scale(self.original_image, (64, 64)), self.angle) \
+                .convert_alpha()
 
+    def update(self, do_fadeout=None, transparency=None, type_of_object=None):
+        self.angle += self.rotation_speed
+        self.update_image()
         self.rect = self.image.get_rect(center=(self.x, self.y))
-
         self.calculate_position()
-
-        if do_fadeout:
-            self.transparency = transparency
-            image = pygame_to_pillow(self.image)
-
-            pixel = image.load()
-            for row in range(image.size[0]):
-                for column in range(image.size[1]):
-                    if pixel[row, column] != (0, 0, 0, 0):
-                        pixel[row, column] = (pixel[row, column][0], pixel[row, column][1],
-                                              pixel[row, column][2], self.transparency)
-
-            self.image = pygame.transform.scale(pillow_to_pygame(image),
-                                                (64, 64)).convert_alpha()
