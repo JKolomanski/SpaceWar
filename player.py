@@ -1,22 +1,11 @@
 import random
-from PIL import Image
-
 import pygame
 import math
-from graphics import get_resolution
+
+from graphics import get_resolution, pillow_to_pygame, pygame_to_pillow
 
 get_resolution()
 resolution = [get_resolution()[0], get_resolution()[1]]
-
-
-def pillow_to_pygame(pillow_image):
-    return pygame.image.fromstring(
-        pillow_image.tobytes(), pillow_image.size, pillow_image.mode).convert_alpha()
-
-
-def pygame_to_pillow(pygame_surface):
-    raw_str = pygame.image.tostring(pygame_surface, 'RGBA', False)
-    return Image.frombytes('RGBA', pygame_surface.get_size(), raw_str)
 
 
 # noinspection PyUnresolvedReferences

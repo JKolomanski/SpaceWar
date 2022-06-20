@@ -1,6 +1,7 @@
 import pygame
 import json
 from PIL import Image
+
 global resolution
 
 
