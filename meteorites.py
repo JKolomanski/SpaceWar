@@ -22,9 +22,9 @@ def pygame_to_pillow(pygame_surface):
 def define_image(color, size):
     # brown
     if color == 0:
-        r_offset = 3
-        g_offset = -1
-        b_offset = -1
+        r_offset = 4
+        g_offset = -2
+        b_offset = -2
     # gray
     elif color == 1:
         r_offset = 0
@@ -171,7 +171,7 @@ class Meteorite(pygame.sprite.Sprite):
                 .convert_alpha()
 
     def update(self, do_fadeout=None, transparency=None, type_of_object=None):
-        self.angle += self.rotation_speed
         self.update_image()
         self.rect = self.image.get_rect(center=(self.x, self.y))
+        self.angle += self.rotation_speed
         self.calculate_position()
