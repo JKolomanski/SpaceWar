@@ -362,7 +362,7 @@ while True:
         game_played = True
         lives = 3
         initial_meteorite = pygame.sprite.GroupSingle()
-        initial_meteorite.add(Meteorite(0))
+        initial_meteorite.add(Meteorite(0, x=resolution[0] / 2, y=resolution[1] + 30, angle=180))
         meteorite_group = [initial_meteorite]
         cursor.sprite.__init__()
         player.sprite.__init__()
