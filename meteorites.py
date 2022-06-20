@@ -36,10 +36,21 @@ def define_image(color, size):
         g_offset = -4
         b_offset = 4
 
+    shape = random.randint(0, 100)
     if size == 0:
-        image_file = 'Assets/Meteorites/meteorite_large.png'
+        if shape < 40:
+            image_file = 'Assets/Meteorites/meteorite_large_1.png'
+        elif shape < 80:
+            image_file = 'Assets/Meteorites/meteorite_large_2.png'
+        else:
+            image_file = 'Assets/Meteorites/meteorite_large_3.png'
     else:
-        image_file = 'Assets/Meteorites/meteorite_small.png'
+        if shape < 40:
+            image_file = 'Assets/Meteorites/meteorite_small_1.png'
+        elif shape < 80:
+            image_file = 'Assets/Meteorites/meteorite_small_2.png'
+        else:
+            image_file = 'Assets/Meteorites/meteorite_small_3.png'
 
     image = pygame.image.load(image_file).convert_alpha()
     image = pygame_to_pillow(image)
