@@ -12,19 +12,19 @@ resolution = [get_resolution()[0], get_resolution()[1]]
 def define_image(color, size):
     # brown
     if color == 0:
-        r_offset = 4
-        g_offset = -2
-        b_offset = -2
+        r_offset = 4 + random.randint(-1, 1)
+        g_offset = -2 + random.randint(-1, 1)
+        b_offset = -2 + random.randint(-1, 1)
     # gray
     elif color == 1:
-        r_offset = 0
-        g_offset = 0
-        b_offset = 0
+        r_offset = 0 + random.randint(-1, 1)
+        g_offset = 0 + random.randint(-1, 1)
+        b_offset = 0 + random.randint(-1, 1)
     # blue
     else:
-        r_offset = -4
-        g_offset = -4
-        b_offset = 4
+        r_offset = -4 + random.randint(-1, 1)
+        g_offset = -4 + random.randint(-1, 1)
+        b_offset = 4 + random.randint(-1, 1)
 
     shape = random.randint(0, 100)
     if size == 0:
