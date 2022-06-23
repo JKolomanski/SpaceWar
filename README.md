@@ -1,4 +1,4 @@
-# ![alt text](Assets\GUI\spacewar_icon.png) SpaceWar!
+# ![Alt text](Assets/GUI/spacewar_icon.png?raw=true "Title") SpaceWar!
 
 
 ## Overview
