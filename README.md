@@ -1,4 +1,4 @@
-# SpaceWar!
+# ![alt text](Assets\GUI\spacewar_icon.png) SpaceWar!
 
 
 ## Overview
@@ -43,7 +43,7 @@ Not implemented yet
 
 ### Short-term:
 
-- Meteorite breaking animation
+- Player knockback
 - Player-taking-damage animation
 - Player death animation
 - Highscore, display highscore on game-over screen
