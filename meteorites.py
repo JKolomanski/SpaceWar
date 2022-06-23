@@ -61,6 +61,9 @@ class Meteorite(pygame.sprite.Sprite):
 
         self.rotation_speed = random.randint(-100, 100) / 100
         self.cracked = False
+        self.broken = False
+        self.breaking_level = 0
+        self.dead = False
 
         # If the meteorite is not a child
         if not child:
@@ -157,11 +160,27 @@ class Meteorite(pygame.sprite.Sprite):
             for row in range(image.size[0]):
                 for column in range(image.size[1]):
                     if pixel[row, column] != (0, 0, 0, 0):
-                        crack = random.randint(0, 20)
-                        if not crack:
+                        swap = random.randint(0, 20)
+                        if swap == 0:
                             pixel[row, column] = (0, 0, 0, 0)
                             self.cracked_level += 1
             self.starting_image = pillow_to_pygame(image)
+
+    def breaking(self, pixels):
+        if self.broken and self.breaking_level < pow(pixels, 2):
+            image = pygame_to_pillow(pygame.transform.scale(self.starting_image, (pixels, pixels)))
+
+            pixel = image.load()
+            for row in range(image.size[0]):
+                for column in range(image.size[1]):
+                    if pixel[row, column] != (0, 0, 0, 0):
+                        swap = random.randint(0, 20)
+                        if swap == 0:
+                            pixel[row, column] = (0, 0, 0, 0)
+                            self.breaking_level += 5
+            self.starting_image = pillow_to_pygame(image)
+        if self.breaking_level >= pow(pixels, 2):
+            self.dead = True
 
     def update_image(self):
         # Large meteorites
@@ -175,7 +194,11 @@ class Meteorite(pygame.sprite.Sprite):
                 .convert_alpha()
 
     def update(self, do_fadeout=None, transparency=None, type_of_object=None):
-        self.cracking()
+        if self.size == 0:
+            self.cracking()
+            self.breaking(pixels=32)
+        else:
+            self.breaking(pixels=16)
         self.update_image()
         self.rect = self.image.get_rect(center=(self.x, self.y))
         self.angle += self.rotation_speed

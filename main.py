@@ -282,6 +282,7 @@ while True:
         # Meteorites
         for meteorite in meteorite_group:
             meteorite.update()
+            # Collide with player
             if pygame.sprite.spritecollide(player.sprite, meteorite, False):
                 if not invincibility_cooldown:
                     lives -= 1
@@ -291,19 +292,22 @@ while True:
                         player_explosion_sound.play()
                     invincibility_cooldown = 60
 
+            # Collide with player_laser
             elif pygame.sprite.groupcollide(laser_player_group, meteorite, True, False):
                 # Small meteorites
                 if meteorite.sprite.size == 1:
                     hit_sound.play()
                     score += 1
+                    meteorite.sprite.broken = True
+
                     if len(meteorite_group) < 5:
                         meteorite_index = len(meteorite_group)
                         meteorite_group.append(str(meteorite_index))
                         meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
                         meteorite_group[meteorite_index].add(Meteorite(random.randint(0, 1)))
 
-                    meteorite.sprite.kill()
-                    del meteorite_group[meteorite_group.index(meteorite)]
+                    # print(f' before: {len(meteorite_group)}')
+                    # print(f' after: {len(meteorite_group)}')
 
                 # Large meteorites
                 elif meteorite.sprite.size == 0:
@@ -334,12 +338,18 @@ while True:
                                            meteorite.sprite.color))
 
                         score += 3
-                        meteorite.sprite.kill()
-                        del meteorite_group[meteorite_group.index(meteorite)]
+                        meteorite.sprite.broken = True
+                        if meteorite.sprite.breaking_level >= 1024:
+                            meteorite.sprite.kill()
+                            del meteorite_group[meteorite_group.index(meteorite)]
 
                     elif not meteorite.sprite.cracked:
                         hit_sound.play()
                         meteorite.sprite.cracked = True
+
+            if meteorite.sprite.dead:
+                meteorite.sprite.kill()
+                del meteorite_group[meteorite_group.index(meteorite)]
 
         # Separate for loop to prevent meteorites from flickering
         for meteorite in meteorite_group:
