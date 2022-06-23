@@ -84,7 +84,7 @@ else:
     menu_background = pygame.image.load('Assets/Backgrounds/background_nebula.png').convert()
 
 
-# Sounds
+# Sound effects
 choose_sound = pygame.mixer.Sound('Assets/Sounds/menu_choose.wav')
 choose_sound.set_volume(0.5)
 
@@ -124,12 +124,12 @@ score = 0
 lives = 3
 invincibility_cooldown = 60
 
-# Text
+# Text and font
 font = pygame.font.Font('Assets/Spacewarfont/spacewarfont.ttf', 20)
 score_surf = font.render(str(score), False, 'White')
 score_rect = score_surf.get_rect(topleft=(488, 12))
 
-# Groups
+# Groups and classes
 logo = pygame.sprite.Group()
 logo.add(GuiObject(type_of_object='logo'))
 
@@ -175,7 +175,6 @@ laser_player_group.add(LaserPlayer(-50, -50, 0))
 initial_meteorite = pygame.sprite.GroupSingle()
 initial_meteorite.add(Meteorite(0, x=resolution[0] / 2, y=resolution[1] + 30, angle=180))
 meteorite_group = [initial_meteorite]
-
 
 GuiObject_list = [press_any_key_button, arcade, campaign, settings, hint]
 
@@ -324,15 +323,11 @@ while True:
                         meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
                         meteorite_group[meteorite_index].add(Meteorite(random.randint(0, 1)))
 
-                    # print(f' before: {len(meteorite_group)}')
-                    # print(f' after: {len(meteorite_group)}')
-
                 # Large meteorites
                 elif meteorite.sprite.size == 0:
                     if meteorite.sprite.cracked:
                         breakout(meteorite_group, meteorite.sprite.x, meteorite.sprite.y,
                                  meteorite.sprite.starting_angle, meteorite.sprite.speed, meteorite.sprite.color)
-
                         score += 3
                         meteorite.sprite.broken = True
 
@@ -340,6 +335,7 @@ while True:
                         hit_sound.play()
                         meteorite.sprite.cracked = True
 
+            # Kill meteorites
             if meteorite.sprite.dead:
                 meteorite.sprite.kill()
                 del meteorite_group[meteorite_group.index(meteorite)]
@@ -369,16 +365,13 @@ while True:
         cursor.sprite.__init__()
         player.sprite.__init__()
         laser_player_group.empty()
-
         screen.blit(menu_background, (0, 0))
 
         game_over.draw(screen)
-
         press_any_key_button.draw(screen)
         press_any_key_button.update(type_of_object='press_any_key')
 
         score_frame2.draw(screen)
-
         score_surf = font.render(f'{score}', False, 'White')
         if gamemode_transition == 256:
             screen.blit(score_surf, score_surf.get_rect(topleft=(resolution[0] / 2 + 8, resolution[1] / 1.85 + 12)))
