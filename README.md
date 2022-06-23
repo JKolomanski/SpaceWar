@@ -5,7 +5,7 @@
 SpaceWar! is a simple asteroids-inspired game made in python.
 This project was started by me to learn some basic python and programming in general
 
-External libraries used: Pygame, Pillow
+External libraries used: Pygame, Pillow, Pyinstaller
 
 
 ## Installation
