@@ -52,7 +52,7 @@ resolution = [get_resolution()[0], get_resolution()[1]]
 
 screen = pygame.display.set_mode(resolution)
 pygame.display.set_caption('SpaceWar!')
-pygame.display.set_icon(pygame.image.load('Assets/Player/player1_01.png'))
+pygame.display.set_icon(pygame.image.load('Assets/GUI/spacewar_icon.png'))
 
 # Randomise background
 background_index = random.randint(1, 4)
