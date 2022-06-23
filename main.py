@@ -44,6 +44,24 @@ def fade(object_list, object_list2, switch_to, start_menu=None):
     return [object_list, object_list2]
 
 
+def breakout(temp_meteorite_group, x, y, angle, speed, color):
+    explosion_sound.play()
+    temp_meteorite_index = len(temp_meteorite_group)
+    temp_meteorite_group.append(str(temp_meteorite_index))
+    temp_meteorite_group[temp_meteorite_index] = pygame.sprite.GroupSingle()
+    temp_meteorite_group[temp_meteorite_index].add(Meteorite(1, True, x, y, angle - 180, speed, color))
+
+    temp_meteorite_index = len(temp_meteorite_group)
+    temp_meteorite_group.append(str(temp_meteorite_index))
+    temp_meteorite_group[temp_meteorite_index] = pygame.sprite.GroupSingle()
+    temp_meteorite_group[temp_meteorite_index].add(Meteorite(1, True, x, y, angle - 60, speed, color))
+
+    temp_meteorite_index = len(temp_meteorite_group)
+    temp_meteorite_group.append(str(temp_meteorite_index))
+    temp_meteorite_group[temp_meteorite_index] = pygame.sprite.GroupSingle()
+    temp_meteorite_group[temp_meteorite_index].add(Meteorite(1, True, x, y, angle - 300, speed, color))
+
+
 pygame.init()
 
 # Screen, icon, display caption
@@ -312,36 +330,11 @@ while True:
                 # Large meteorites
                 elif meteorite.sprite.size == 0:
                     if meteorite.sprite.cracked:
-                        explosion_sound.play()
-                        meteorite_index = len(meteorite_group)
-                        meteorite_group.append(str(meteorite_index))
-                        meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
-                        meteorite_group[meteorite_index]\
-                            .add(Meteorite(1, True, meteorite.sprite.x, meteorite.sprite.y,
-                                           meteorite.sprite.starting_angle - 180, meteorite.sprite.speed,
-                                           meteorite.sprite.color))
-
-                        meteorite_index = len(meteorite_group)
-                        meteorite_group.append(str(meteorite_index))
-                        meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
-                        meteorite_group[meteorite_index]\
-                            .add(Meteorite(1, True, meteorite.sprite.x, meteorite.sprite.y,
-                                           meteorite.sprite.starting_angle - 60, meteorite.sprite.speed,
-                                           meteorite.sprite.color))
-
-                        meteorite_index = len(meteorite_group)
-                        meteorite_group.append(str(meteorite_index))
-                        meteorite_group[meteorite_index] = pygame.sprite.GroupSingle()
-                        meteorite_group[meteorite_index]\
-                            .add(Meteorite(1, True, meteorite.sprite.x, meteorite.sprite.y,
-                                           meteorite.sprite.starting_angle - 300, meteorite.sprite.speed,
-                                           meteorite.sprite.color))
+                        breakout(meteorite_group, meteorite.sprite.x, meteorite.sprite.y,
+                                 meteorite.sprite.starting_angle, meteorite.sprite.speed, meteorite.sprite.color)
 
                         score += 3
                         meteorite.sprite.broken = True
-                        if meteorite.sprite.breaking_level >= 1024:
-                            meteorite.sprite.kill()
-                            del meteorite_group[meteorite_group.index(meteorite)]
 
                     elif not meteorite.sprite.cracked:
                         hit_sound.play()
