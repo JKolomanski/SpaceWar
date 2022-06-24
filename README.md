@@ -43,18 +43,18 @@ Not implemented yet
 
 ### Short-term:
 
-- Player knockback
 - Player-taking-damage animation
 - Player death animation
 - Highscore, display highscore on game-over screen
-- PowerUps
+- Settings menu with the ability to change window size and reset highscore
 
 ### Medium-term:
 
+- Add different player spaceship colors unlockable by achieving specific highscores
+- Add the ability to change player color in setting menu
+- PowerUps
 - Weapon pickups
 - Alien enemies
-- Add different player spaceship colors unlockable by achieving specific highscores
-- Settings menu with ability to change window size and player color
 
 ### Long-term (if ever):
 
