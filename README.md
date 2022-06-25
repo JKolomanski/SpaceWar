@@ -43,14 +43,12 @@ Not implemented yet
 
 ### Short-term:
 
-- Player-taking-damage animation
-- Player death animation
 - Highscore, display highscore on game-over screen
 - Settings menu with the ability to change window size and reset highscore
+- Add different player spaceship colors unlockable by achieving specific highscores
 
 ### Medium-term:
 
-- Add different player spaceship colors unlockable by achieving specific highscores
 - Add the ability to change player color in setting menu
 - PowerUps
 - Weapon pickups
