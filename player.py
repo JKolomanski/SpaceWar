@@ -44,6 +44,10 @@ class Player(pygame.sprite.Sprite):
         player_on3 = pygame.transform.scale(pygame.image.load('Assets/Player/player1_03.png'), (64, 64))\
             .convert_alpha()
 
+        self.breaking_level = 0
+        self.broken = False
+        self.dead = False
+
         self.animation_frames = [player_on1, player_on2, player_on3]
         self.initial_image = self.animation_frames[self.player_animation_index]
         self.image = self.initial_image
@@ -136,10 +140,6 @@ class Player(pygame.sprite.Sprite):
         if self.y < -20:
             self.y = resolution[1] + 20
 
-        # Rotate the player image
-        self.image = pygame.transform.rotate(self.initial_image, self.angle)
-        self.rect = self.image.get_rect(center=(self.x, self.y))
-
     def shoot(self):
         keys = pygame.key.get_pressed()
 
@@ -172,11 +172,34 @@ class Player(pygame.sprite.Sprite):
         else:
             self.energy_regen = 0
 
+    def breaking(self):
+        image = pygame_to_pillow(pygame.transform.scale(self.image, (16, 16)))
+
+        pixel = image.load()
+        for row in range(image.size[0]):
+            for column in range(image.size[1]):
+                if pixel[row, column] != (0, 0, 0, 0):
+                    swap = random.randint(0, 20)
+                    if swap == 0:
+                        pixel[row, column] = (0, 0, 0, 0)
+                        self.breaking_level += 1
+        self.initial_image = pygame.transform.scale(pillow_to_pygame(image), (64, 64))
+        self.image = pygame.transform.rotate(self.initial_image, self.angle)
+
     def update(self, do_fadeout=None, transparency=None, type_of_object=None):
         self.shoot()
         self.going_forward()
         self.turning()
         self.calculating_position()
+
+        # Create the player image
+        if not self.broken:
+            self.image = pygame.transform.rotate(self.initial_image, self.angle)
+        elif self.broken:
+            self.breaking()
+        self.rect = self.image.get_rect(center=(self.x, self.y))
+        if self.breaking_level >= 1:
+            self.dead = True
 
 
 class LaserPlayer(pygame.sprite.Sprite):

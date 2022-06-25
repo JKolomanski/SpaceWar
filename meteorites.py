@@ -107,27 +107,27 @@ class Meteorite(pygame.sprite.Sprite):
             self.cracked_level = 0
             # brown
             if self.color == 0:
-                self.starting_image = define_image(0, 0)
+                self.initial_image = define_image(0, 0)
             # gray
             if self.color == 1:
-                self.starting_image = define_image(1, 0)
+                self.initial_image = define_image(1, 0)
             # blue
             if self.color == 2:
-                self.starting_image = define_image(2, 0)
+                self.initial_image = define_image(2, 0)
 
         # Small meteorites
         if self.size == 1:
             # brown
             if self.color == 0:
-                self.starting_image = define_image(0, 1)
+                self.initial_image = define_image(0, 1)
             # gray
             if self.color == 1:
-                self.starting_image = define_image(1, 1)
+                self.initial_image = define_image(1, 1)
             # blue
             if self.color == 2:
-                self.starting_image = define_image(2, 1)
+                self.initial_image = define_image(2, 1)
 
-        self.image = self.starting_image
+        self.image = self.initial_image
         self.rect = self.image.get_rect(center=(self.x, self.y))
 
     def calculate_position(self):
@@ -152,7 +152,7 @@ class Meteorite(pygame.sprite.Sprite):
 
     def cracking(self):
         if self.cracked and self.cracked_level <= 128:
-            image = pygame_to_pillow(pygame.transform.scale(self.starting_image, (32, 32)))
+            image = pygame_to_pillow(pygame.transform.scale(self.initial_image, (32, 32)))
 
             pixel = image.load()
             for row in range(image.size[0]):
@@ -162,11 +162,11 @@ class Meteorite(pygame.sprite.Sprite):
                         if swap == 0:
                             pixel[row, column] = (0, 0, 0, 0)
                             self.cracked_level += 1
-            self.starting_image = pillow_to_pygame(image)
+            self.initial_image = pillow_to_pygame(image)
 
     def breaking(self, pixels):
         if self.broken and self.breaking_level < pow(pixels, 2):
-            image = pygame_to_pillow(pygame.transform.scale(self.starting_image, (pixels, pixels)))
+            image = pygame_to_pillow(pygame.transform.scale(self.initial_image, (pixels, pixels)))
 
             pixel = image.load()
             for row in range(image.size[0]):
@@ -176,19 +176,19 @@ class Meteorite(pygame.sprite.Sprite):
                         if swap == 0:
                             pixel[row, column] = (0, 0, 0, 0)
                             self.breaking_level += 5
-            self.starting_image = pillow_to_pygame(image)
+            self.initial_image = pillow_to_pygame(image)
         if self.breaking_level >= pow(pixels, 2):
             self.dead = True
 
     def update_image(self):
         # Large meteorites
         if self.size == 0:
-            self.image = pygame.transform.rotate(pygame.transform.scale(self.starting_image, (128, 128)), self.angle) \
+            self.image = pygame.transform.rotate(pygame.transform.scale(self.initial_image, (128, 128)), self.angle) \
                 .convert_alpha()
 
         # Small meteorites
         elif self.size == 1:
-            self.image = pygame.transform.rotate(pygame.transform.scale(self.starting_image, (64, 64)), self.angle) \
+            self.image = pygame.transform.rotate(pygame.transform.scale(self.initial_image, (64, 64)), self.angle) \
                 .convert_alpha()
 
     def update(self, do_fadeout=None, transparency=None, type_of_object=None):

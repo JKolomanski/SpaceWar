@@ -8,7 +8,7 @@ from meteorites import Meteorite
 from particle_effects import Sparks
 
 
-def fade(object_list, object_list2, switch_to, start_menu=None):
+def fade(object_list, object_list2, switch_to, start_menu=None, is_player_dead=None):
     global lives
     global fading
     global gamemode
@@ -19,9 +19,8 @@ def fade(object_list, object_list2, switch_to, start_menu=None):
         speed_of_transition = 40
 
     def do_fade(list_of_objects):
-        if gamemode_transition < 256:
-            for i in list_of_objects:
-                i.update(type_of_object=str(i), do_fadeout=True, transparency=gamemode_transition)
+        for i in list_of_objects:
+            i.update(type_of_object=str(i), do_fadeout=True, transparency=gamemode_transition)
         return list_of_objects
 
     if gamemode_transition < 256 and fading == 0:
@@ -36,12 +35,17 @@ def fade(object_list, object_list2, switch_to, start_menu=None):
     elif gamemode_transition < 256 and fading == 1:
         if switch_to == 5:
             lives -= 1
-        gamemode_transition -= 40
+            gamemode_transition -= 5
+        else:
+            gamemode_transition -= 40
         object_list2 = do_fade(list_of_objects=object_list2)
 
     if gamemode_transition <= 0:
         fading = 0
-        gamemode = switch_to
+        if switch_to != 5:
+            gamemode = switch_to
+        elif is_player_dead:
+            gamemode = switch_to
     return [object_list, object_list2]
 
 
@@ -269,7 +273,8 @@ while True:
 
     # Arcade mode
     elif gamemode == 3:
-        GuiObject_list4 = fade(object_list=GuiObject_list4, object_list2=GuiObject_list4, switch_to=5)[1]
+        GuiObject_list4 = fade(object_list=GuiObject_list4, object_list2=GuiObject_list4,
+                               switch_to=5, is_player_dead=player.sprite.dead)[1]
 
         screen.blit(menu_background, (0, 0))
 
@@ -363,6 +368,7 @@ while True:
 
         if lives == 0:
             gamemode_transition = 255
+            player.sprite.broken = True
 
         player.draw(screen)
         player.update()
