@@ -29,7 +29,7 @@ class Sparks(pygame.sprite.Sprite):
                         pixel[row, column] = (0, 0, 0, 0)
                     swap = random.randint(0, self.lifetime)
                     if swap == 0:
-                        pixel[row, column] = (155, random.randint(100, 220), 0, 256)
+                        pixel[row, column] = (random.randint(190, 255), random.randint(100, 220), random.randint(0, 100), 256)
                         self.lifetime += 10
 
     def pygame_image(self):
