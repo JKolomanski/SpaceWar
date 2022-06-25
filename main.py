@@ -5,6 +5,7 @@ from sys import exit
 from player import Player, PlayerCursor, LaserPlayer
 from graphics import GuiObject, get_resolution
 from meteorites import Meteorite
+from particle_effects import Sparks
 
 
 def fade(object_list, object_list2, switch_to, start_menu=None):
@@ -176,6 +177,9 @@ initial_meteorite = pygame.sprite.GroupSingle()
 initial_meteorite.add(Meteorite(0, x=resolution[0] / 2, y=resolution[1] + 30, angle=180))
 meteorite_group = [initial_meteorite]
 
+sparks = pygame.sprite.GroupSingle()
+sparks.add(Sparks(x=player.sprite.x, y=player.sprite.y))
+
 GuiObject_list = [press_any_key_button, arcade, campaign, settings, hint]
 
 GuiObject_list2 = [logo, press_any_key_button, arcade, campaign, settings, hint, cursor]
@@ -271,7 +275,7 @@ while True:
 
         # Player shooting
         if player.sprite.shooting:
-            laser_player_group.add(LaserPlayer(x=player.sprite.x, y=player.sprite.y, angle=player.sprite.player_angle))
+            laser_player_group.add(LaserPlayer(x=player.sprite.x, y=player.sprite.y, angle=player.sprite.angle))
 
         laser_player_group.update()
         laser_player_group.draw(screen)
@@ -299,6 +303,7 @@ while True:
         # Meteorites
         for meteorite in meteorite_group:
             meteorite.update()
+
             # Collide with player
             if pygame.sprite.spritecollide(player.sprite, meteorite, False):
                 if not invincibility_cooldown:
@@ -308,6 +313,12 @@ while True:
                     else:
                         player_explosion_sound.play()
                     invincibility_cooldown = 60
+
+                # Spark
+                sparks.sprite.x = player.sprite.x
+                sparks.sprite.y = player.sprite.y
+                sparks.sprite.lifetime = 0
+
                 # Knockback
                 player.sprite.dx += (player.sprite.x - meteorite.sprite.x) * 0.009
                 player.sprite.dy += (player.sprite.y - meteorite.sprite.y) * 0.009
@@ -356,6 +367,9 @@ while True:
         player.draw(screen)
         player.update()
 
+        sparks.draw(screen)
+        sparks.update()
+
     # Game over screen
     elif gamemode == 5:
         GuiObject_list5 = fade(object_list=GuiObject_list5, object_list2=GuiObject_list5, switch_to=1)[1]
@@ -367,6 +381,7 @@ while True:
         meteorite_group = [initial_meteorite]
         cursor.sprite.__init__()
         player.sprite.__init__()
+        sparks.sprite.lifetime = 256
         laser_player_group.empty()
         screen.blit(menu_background, (0, 0))
 

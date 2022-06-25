@@ -8,7 +8,6 @@ get_resolution()
 resolution = [get_resolution()[0], get_resolution()[1]]
 
 
-# noinspection PyUnresolvedReferences
 def define_image(color, size):
     # brown
     if color == 0:
@@ -54,7 +53,6 @@ def define_image(color, size):
     return pillow_to_pygame(image)
 
 
-# noinspection PyUnresolvedReferences
 class Meteorite(pygame.sprite.Sprite):
     def __init__(self, size, child=None, x=None, y=None, angle=None, speed=None, color=None):
         super().__init__()

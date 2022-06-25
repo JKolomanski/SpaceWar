@@ -8,7 +8,6 @@ get_resolution()
 resolution = [get_resolution()[0], get_resolution()[1]]
 
 
-# noinspection PyUnresolvedReferences
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -20,8 +19,8 @@ class Player(pygame.sprite.Sprite):
         self.dx = 0
         self.dy = 0
 
-        self.player_angle = 180
-        self.engine_angle = self.player_angle
+        self.angle = 180
+        self.engine_angle = self.angle
         self.player_animation_index = 0
         self.max_speed = 6
 
@@ -62,7 +61,7 @@ class Player(pygame.sprite.Sprite):
             if self.player_animation_index >= len(self.animation_frames):
                 self.player_animation_index = 0
             self.image = self.animation_frames[int(self.player_animation_index)]
-            self.engine_angle = self.player_angle
+            self.engine_angle = self.angle
 
             ax = math.cos(math.radians(self.engine_angle - 90))
             ay = -math.sin(math.radians(self.engine_angle - 90))
@@ -91,11 +90,11 @@ class Player(pygame.sprite.Sprite):
 
         # Turning left (counter-clockwise)
         if keys[pygame.K_a]:
-            self.player_angle += 5
+            self.angle += 5
 
         # Turning right (clockwise)
         if keys[pygame.K_d]:
-            self.player_angle -= 5
+            self.angle -= 5
 
     def calculating_position(self):
         global resolution
@@ -137,7 +136,7 @@ class Player(pygame.sprite.Sprite):
             self.y = resolution[1] + 20
 
         # Rotate the player image
-        self.image = pygame.transform.rotate(self.image, self.player_angle)
+        self.image = pygame.transform.rotate(self.image, self.angle)
         self.rect = self.image.get_rect(center=(self.x, self.y))
 
     def shoot(self):
@@ -179,7 +178,6 @@ class Player(pygame.sprite.Sprite):
         self.calculating_position()
 
 
-# noinspection PyUnresolvedReferences
 class LaserPlayer(pygame.sprite.Sprite):
     def __init__(self, x, y, angle):
         super().__init__()
@@ -232,7 +230,6 @@ class LaserPlayer(pygame.sprite.Sprite):
                                                 (64, 64)).convert_alpha()
 
 
-# noinspection PyTypeChecker,PyUnresolvedReferences
 class PlayerCursor(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
