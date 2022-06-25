@@ -45,7 +45,8 @@ class Player(pygame.sprite.Sprite):
             .convert_alpha()
 
         self.animation_frames = [player_on1, player_on2, player_on3]
-        self.image = self.animation_frames[self.player_animation_index]
+        self.initial_image = self.animation_frames[self.player_animation_index]
+        self.image = self.initial_image
         self.rect = self.image.get_rect(center=(self.x, self.y))
 
         self.shoot_sound = pygame.mixer.Sound('Assets/Sounds/shoot.wav')
@@ -60,7 +61,7 @@ class Player(pygame.sprite.Sprite):
             self.player_animation_index += 0.3
             if self.player_animation_index >= len(self.animation_frames):
                 self.player_animation_index = 0
-            self.image = self.animation_frames[int(self.player_animation_index)]
+            self.initial_image = self.animation_frames[int(self.player_animation_index)]
             self.engine_angle = self.angle
 
             ax = math.cos(math.radians(self.engine_angle - 90))
@@ -75,7 +76,7 @@ class Player(pygame.sprite.Sprite):
             self.engine = True
             if self.energy < 480:
                 self.energy += self.energy_regen
-            self.image = self.player_off
+            self.initial_image = self.player_off
 
         elif keys[pygame.K_w] and self.energy == 0 or keys[pygame.K_w] and not self.engine:
             self.engine = False
@@ -136,7 +137,7 @@ class Player(pygame.sprite.Sprite):
             self.y = resolution[1] + 20
 
         # Rotate the player image
-        self.image = pygame.transform.rotate(self.image, self.angle)
+        self.image = pygame.transform.rotate(self.initial_image, self.angle)
         self.rect = self.image.get_rect(center=(self.x, self.y))
 
     def shoot(self):
