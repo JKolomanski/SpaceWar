@@ -325,8 +325,9 @@ while True:
                 sparks.sprite.lifetime = 0
 
                 # Knockback
-                player.sprite.dx += (player.sprite.x - meteorite.sprite.x) * 0.009
-                player.sprite.dy += (player.sprite.y - meteorite.sprite.y) * 0.009
+                if lives >= 1:
+                    player.sprite.dx += (player.sprite.x - meteorite.sprite.x) * 0.009
+                    player.sprite.dy += (player.sprite.y - meteorite.sprite.y) * 0.009
 
             # Collide with player_laser
             elif pygame.sprite.groupcollide(laser_player_group, meteorite, True, False):
