@@ -316,13 +316,14 @@ while True:
                     if lives > 0:
                         player_hit_sound.play()
                     else:
+                        player_hit_sound.play()
                         player_explosion_sound.play()
                     invincibility_cooldown = 60
 
-                # Spark
-                sparks.sprite.x = player.sprite.x
-                sparks.sprite.y = player.sprite.y
-                sparks.sprite.lifetime = 0
+                    # Spark
+                    sparks.sprite.x = player.sprite.x
+                    sparks.sprite.y = player.sprite.y
+                    sparks.sprite.lifetime = 0
 
                 # Knockback
                 if lives >= 1:
