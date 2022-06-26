@@ -1,6 +1,8 @@
 import random
 import pygame
+import json
 from sys import exit
+import ast
 
 from player import Player, PlayerCursor, LaserPlayer
 from graphics import GuiObject, get_resolution
@@ -67,6 +69,25 @@ def breakout(temp_meteorite_group, x, y, angle, speed, color):
     temp_meteorite_group[temp_meteorite_index].add(Meteorite(1, True, x, y, angle - 300, speed, color))
 
 
+def get_highscore():
+    with open("options.json", "r") as f:
+        data = json.load(f)
+    highscore = int(data['highscore'])
+    return highscore
+
+
+def save_highscore(highscore):
+    with open("options.json", "r") as f:
+        data = json.load(f)
+        data['highscore'] = str(highscore)
+
+        new_data = json.dumps(data)
+        # print(ast.literal_eval(new_data))
+
+    with open("options.json", "w") as f:
+        json.dump(ast.literal_eval(new_data), f)
+
+
 pygame.init()
 
 # Screen, icon, display caption
@@ -87,7 +108,6 @@ elif background_index == 3:
     menu_background = pygame.image.load('Assets/Backgrounds/background_mars.png').convert()
 else:
     menu_background = pygame.image.load('Assets/Backgrounds/background_nebula.png').convert()
-
 
 # Sound effects
 choose_sound = pygame.mixer.Sound('Assets/Sounds/menu_choose.wav')
@@ -126,6 +146,7 @@ game_played = False
 deadzone = 32
 meteorite_index = 0
 score = 0
+new_highscore = False
 lives = 3
 invincibility_cooldown = 60
 
@@ -158,6 +179,9 @@ game_over.add(GuiObject(type_of_object='game_over'))
 
 score_frame2 = pygame.sprite.Group()
 score_frame2.add(GuiObject(type_of_object='score_frame2'))
+
+new_highscore_frame = pygame.sprite.Group()
+new_highscore_frame.add(GuiObject(type_of_object='new_highscore_frame'))
 
 energy_frame = pygame.sprite.Group()
 energy_frame.add(GuiObject(type_of_object='energy_frame'))
@@ -273,6 +297,8 @@ while True:
 
     # Arcade mode
     elif gamemode == 3:
+        new_highscore = False
+
         GuiObject_list4 = fade(object_list=GuiObject_list4, object_list2=GuiObject_list4,
                                switch_to=5, is_player_dead=player.sprite.dead)[1]
 
@@ -397,10 +423,24 @@ while True:
         press_any_key_button.draw(screen)
         press_any_key_button.update(type_of_object='press_any_key')
 
-        score_frame2.draw(screen)
-        score_surf = font.render(f'{score}', False, 'White')
-        if gamemode_transition == 256:
-            screen.blit(score_surf, score_surf.get_rect(topleft=(resolution[0] / 2 + 8, resolution[1] / 1.85 + 12)))
+        if score > get_highscore() and not new_highscore:
+            new_highscore = True
+
+        if not new_highscore:
+            score_frame2.draw(screen)
+            score_surf = font.render(f'{score}', False, 'White')
+
+            if gamemode_transition == 256:
+                screen.blit(score_surf, score_surf.get_rect(topleft=(resolution[0] / 2 + 8, resolution[1] / 1.85 + 12)))
+
+        elif new_highscore:
+            save_highscore(score)
+            new_highscore_frame.draw(screen)
+            score_surf = font.render(f'{score}', False, 'White')
+
+            if gamemode_transition == 256:
+                screen\
+                    .blit(score_surf, score_surf.get_rect(topleft=(resolution[0] / 2 + 72, resolution[1] / 1.85 + 12)))
 
     # Refresh screen
     pygame.display.update()

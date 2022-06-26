@@ -139,6 +139,13 @@ class GuiObject(pygame.sprite.Sprite):
             self.image = pygame.transform.scale(pygame.image.load(self.image_file_0), (184, 44))
             self.rect = self.image.get_rect(midtop=(resolution[0] / 2, resolution[1] / 1.85))
 
+        if type_of_object == 'new_highscore_frame':
+            self.size_x = 312
+            self.size_y = 44
+            self.image_file_0 = 'Assets/GUI/new_highscore_frame.png'
+            self.image = pygame.transform.scale(pygame.image.load(self.image_file_0), (312, 44))
+            self.rect = self.image.get_rect(midtop=(resolution[0] / 2, resolution[1] / 1.85))
+
     def animate(self):
         self.animation_index += 0.03
         if self.animation_index >= len(self.animation_frames):
