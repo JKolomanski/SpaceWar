@@ -151,7 +151,7 @@ lives = 3
 invincibility_cooldown = 60
 
 # Text and font
-font = pygame.font.Font('Assets/Spacewarfont/spacewarfont.ttf', 20)
+font = pygame.font.Font('Assets/spacewarfont/spacewarfont.ttf', 20)
 score_surf = font.render(str(score), False, 'White')
 score_rect = score_surf.get_rect(topleft=(488, 12))
 
